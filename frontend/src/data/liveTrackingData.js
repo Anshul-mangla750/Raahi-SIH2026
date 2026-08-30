@@ -1,0 +1,112 @@
+export const trackingKPIData = [
+  {
+    id: 'total',
+    title: 'Total Vehicles',
+    value: '24',
+    subtitle: 'All Vehicles',
+    trend: '↑ 14% from last month',
+    trendType: 'up',
+    icon: 'truck',
+    iconBg: 'bg-emerald-50 text-emerald-600 border border-emerald-100',
+  },
+  {
+    id: 'on-move',
+    title: 'On the Move',
+    value: '18',
+    subtitle: '75%',
+    trend: '↑ 8% from last month',
+    trendType: 'up',
+    icon: 'truck-move',
+    iconBg: 'bg-blue-50 text-blue-600 border border-blue-100',
+  },
+  {
+    id: 'stopped',
+    title: 'Stopped',
+    value: '4',
+    subtitle: '17%',
+    trend: '↓ 5% from last month',
+    trendType: 'down',
+    icon: 'compass',
+    iconBg: 'bg-purple-50 text-purple-600 border border-purple-100',
+  },
+  {
+    id: 'idle',
+    title: 'Idle',
+    value: '2',
+    subtitle: '8%',
+    trend: '↓ 3% from last month',
+    trendType: 'down',
+    icon: 'truck-idle',
+    iconBg: 'bg-orange-50 text-orange-500 border border-orange-100',
+  },
+];
+
+export const activeTrackingVehicle = {
+  vehicleNo: 'AS01GC9876',
+  vehicleNoFormatted: 'AS 01 GC 9876',
+  model: 'TATA 407',
+  status: 'In Transit',
+  driver: 'Bikash Das',
+  phone: '+91 98765 43210',
+  rating: '4.8',
+  image: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=400&q=80',
+  route: {
+    start: 'Guwahati',
+    startState: 'Assam',
+    destination: 'Dibrugarh',
+    destinationState: 'Assam',
+  },
+  progress: {
+    percentage: 65,
+    completedText: '65% Completed',
+    etaText: 'ETA: 11:30AM',
+  },
+  stats: {
+    distanceTravelled: '342km',
+    speed: '52 km/h',
+    fuelLevel: '68%',
+    lastUpdated: '2 min ago',
+  },
+};
+
+export const recentTrackingUpdates = [
+  {
+    id: 1,
+    location: 'Morigaon Bypass, Assam',
+    status: 'In Transit',
+    statusType: 'in-transit',
+    text: 'Vehicle is on the move',
+    date: '14 May 2025',
+    time: '11:15AM',
+    iconType: 'truck',
+  },
+  {
+    id: 2,
+    location: 'Nagaon, Assam',
+    status: 'Reached',
+    statusType: 'reached',
+    text: 'Reached at Nagaon',
+    date: '14 May 2025',
+    time: '09:15AM',
+    iconType: 'check',
+  },
+  {
+    id: 3,
+    location: 'Guwahati, Assam',
+    status: 'Started',
+    statusType: 'started',
+    text: 'Journey started from Guwahati',
+    date: '14 May 2025',
+    time: '08:00AM',
+    iconType: 'check',
+  },
+];
+
+export const tripOverviewData = {
+  totalDistance: '512 km',
+  distanceTravelled: '342 km (65%)',
+  remainingDistance: '170 km',
+  estimatedTime: '3h 15m',
+  eta: '11:30AM',
+  consignments: '4 Consignments',
+};
