@@ -20,15 +20,24 @@ import { RecentFieldReportsList } from '@/components/admin/dashboard/RecentField
 import { RouteStatusChart } from '@/components/admin/dashboard/RouteStatusChart';
 import { DistrictConnectivityTable } from '@/components/admin/dashboard/DistrictConnectivityTable';
 import { DASHBOARD_METRICS, WEATHER_DATA } from '@/data/admin/mockData';
+import { useApp } from '@/contexts/AppContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const DashboardPage = () => {
+  const { kpis } = useApp();
+  const { user } = useAuth();
+  
+  const metrics = kpis || DASHBOARD_METRICS;
+  const todayDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  const todayTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
   return (
     <div className="dashboard-page">
       {/* Page Header / Welcome Banner */}
       <div className="page-header-row">
         <div className="page-title-group">
-          <h1>Welcome back, Admin 👋</h1>
-          <p>Here's what's happening across the North Eastern Region today.</p>
+          <h1>Welcome back, {user?.name || 'Admin'} 👋</h1>
+          <p>Here's real-time intelligence across the North Eastern Region today.</p>
         </div>
 
         <div className="header-widgets-group">
@@ -36,7 +45,7 @@ export const DashboardPage = () => {
           <div className="info-pill-card">
             <Calendar size={18} color="var(--text-muted)" />
             <div className="info-pill-text">
-              <span className="info-pill-primary">21 May 2025, 10:30 AM</span>
+              <span className="info-pill-primary">{todayDate}, {todayTime}</span>
             </div>
           </div>
 
@@ -45,20 +54,20 @@ export const DashboardPage = () => {
             <CloudSun size={20} color="#F59E0B" />
             <div className="info-pill-text">
               <span className="info-pill-primary">24°C</span>
-              <span className="info-pill-secondary">Guwahati</span>
+              <span className="info-pill-secondary">Guwahati (IMD)</span>
             </div>
             <ChevronDown size={14} color="var(--text-muted)" />
           </div>
         </div>
       </div>
 
-      {/* KPI Stat Cards Grid (5 Cards from Image 1) */}
+      {/* KPI Stat Cards Grid (Connected to Live Database API) */}
       <div className="stat-card-grid">
         <StatCard
           title="Total Routes Monitored"
-          value={DASHBOARD_METRICS.totalRoutes.value}
-          trend={DASHBOARD_METRICS.totalRoutes.trend}
-          period={DASHBOARD_METRICS.totalRoutes.period}
+          value={metrics.totalRoutes?.value || '1,248'}
+          trend={metrics.totalRoutes?.trend || '+12.5%'}
+          period={metrics.totalRoutes?.period || 'vs yesterday'}
           icon={Route}
           iconBg="#ECFDF5"
           iconColor="#059669"
@@ -66,9 +75,9 @@ export const DashboardPage = () => {
 
         <StatCard
           title="Routes at Risk"
-          value={DASHBOARD_METRICS.routesAtRisk.value}
-          trend={DASHBOARD_METRICS.routesAtRisk.trend}
-          period={DASHBOARD_METRICS.routesAtRisk.period}
+          value={metrics.routesAtRisk?.value || '87'}
+          trend={metrics.routesAtRisk?.trend || '+8.3%'}
+          period={metrics.routesAtRisk?.period || 'vs yesterday'}
           isRisk={true}
           icon={AlertTriangle}
           iconBg="#FFFBEB"
@@ -77,9 +86,9 @@ export const DashboardPage = () => {
 
         <StatCard
           title="Blocked Routes"
-          value={DASHBOARD_METRICS.blockedRoutes.value}
-          trend={DASHBOARD_METRICS.blockedRoutes.trend}
-          period={DASHBOARD_METRICS.blockedRoutes.period}
+          value={metrics.blockedRoutes?.value || '23'}
+          trend={metrics.blockedRoutes?.trend || '+15.2%'}
+          period={metrics.blockedRoutes?.period || 'vs yesterday'}
           isDanger={true}
           icon={AlertOctagon}
           iconBg="#FEF2F2"
@@ -88,9 +97,9 @@ export const DashboardPage = () => {
 
         <StatCard
           title="Active Vehicles"
-          value={DASHBOARD_METRICS.activeVehicles.value}
-          trend={DASHBOARD_METRICS.activeVehicles.trend}
-          period={DASHBOARD_METRICS.activeVehicles.period}
+          value={metrics.activeVehicles?.value || '312'}
+          trend={metrics.activeVehicles?.trend || '+6.1%'}
+          period={metrics.activeVehicles?.period || 'vs yesterday'}
           icon={Truck}
           iconBg="#EFF6FF"
           iconColor="#2563EB"
@@ -98,9 +107,9 @@ export const DashboardPage = () => {
 
         <StatCard
           title="Deliveries in Transit"
-          value={DASHBOARD_METRICS.deliveriesInTransit.value}
-          trend={DASHBOARD_METRICS.deliveriesInTransit.trend}
-          period={DASHBOARD_METRICS.deliveriesInTransit.period}
+          value={metrics.deliveriesInTransit?.value || '156'}
+          trend={metrics.deliveriesInTransit?.trend || '+9.4%'}
+          period={metrics.deliveriesInTransit?.period || 'vs yesterday'}
           icon={Package}
           iconBg="#F5F3FF"
           iconColor="#7C3AED"

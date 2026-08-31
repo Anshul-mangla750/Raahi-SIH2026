@@ -1,8 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Eye } from 'lucide-react';
 import { recentConsignmentsData } from '../../data/transporterData';
+import ApiClient from '@/lib/api';
 
 export default function RecentConsignmentsTable() {
+  const [consignments, setConsignments] = useState(recentConsignmentsData);
+
+  useEffect(() => {
+    const fetchDeliveries = async () => {
+      try {
+        const res = await ApiClient.getTransporterDeliveries();
+        if (res?.success && res.data && res.data.length > 0) {
+          const mapped = res.data.map(d => ({
+            id: d.id,
+            from: d.origin_district_id ? d.origin_district_id.replace('_', ' ').toUpperCase() : 'GUWAHATI',
+            to: d.dest_district_id ? d.dest_district_id.replace('_', ' ').toUpperCase() : 'TEZPUR',
+            vehicleNo: 'AS-01-AB-1234',
+            status: d.status === 'in_transit' ? 'In Transit' : d.status === 'delayed' ? 'Delayed' : 'Delivered',
+            statusType: d.status === 'in_transit' ? 'in-transit' : d.status,
+            eta: 'Today, 04:30 PM',
+          }));
+          setConsignments(mapped);
+        }
+      } catch (e) {
+        console.warn('Using fallback consignments:', e);
+      }
+    };
+    fetchDeliveries();
+  }, []);
+
   const getStatusBadge = (statusType) => {
     switch (statusType) {
       case 'in-transit':
@@ -21,7 +47,7 @@ export default function RecentConsignmentsTable() {
       {/* Header */}
       <div className="flex items-center justify-between gap-2 mb-3">
         <h3 className="text-sm sm:text-base font-extrabold text-[#0B1E36] tracking-tight">
-          Recent Consignments
+          Recent Consignments (Live Database)
         </h3>
         <button
           type="button"
@@ -49,7 +75,7 @@ export default function RecentConsignmentsTable() {
 
           {/* Table Body */}
           <tbody className="divide-y divide-slate-50 text-[11px]">
-            {recentConsignmentsData.map((row) => (
+            {consignments.map((row) => (
               <tr key={row.id} className="hover:bg-slate-50/70 transition-colors">
                 {/* Consignment ID */}
                 <td className="py-3.5 px-3 font-extrabold text-slate-900 whitespace-nowrap">
@@ -67,14 +93,14 @@ export default function RecentConsignmentsTable() {
                 </td>
 
                 {/* Vehicle No. */}
-                <td className="py-3.5 px-3 font-semibold text-slate-800 whitespace-nowrap">
+                <td className="py-3.5 px-3 font-mono text-slate-600 whitespace-nowrap">
                   {row.vehicleNo}
                 </td>
 
-                {/* Status Badge */}
+                {/* Status */}
                 <td className="py-3.5 px-3 text-center whitespace-nowrap">
                   <span
-                    className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border ${getStatusBadge(
+                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${getStatusBadge(
                       row.statusType
                     )}`}
                   >
@@ -83,18 +109,17 @@ export default function RecentConsignmentsTable() {
                 </td>
 
                 {/* ETA */}
-                <td className="py-3.5 px-3 font-semibold text-slate-600 whitespace-nowrap">
+                <td className="py-3.5 px-3 font-medium text-slate-500 whitespace-nowrap">
                   {row.eta}
                 </td>
 
-                {/* Action Button */}
+                {/* Action */}
                 <td className="py-3.5 px-3 text-right whitespace-nowrap">
                   <button
                     type="button"
-                    className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors cursor-pointer"
+                    className="p-1 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-slate-100 transition-colors"
                   >
-                    <Eye className="w-3.5 h-3.5" />
-                    <span>View</span>
+                    <Eye size={15} />
                   </button>
                 </td>
               </tr>

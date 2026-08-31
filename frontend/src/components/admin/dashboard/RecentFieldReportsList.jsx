@@ -1,10 +1,10 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
-import { RECENT_FIELD_REPORTS } from '@/data/admin/mockData';
 import { useApp } from '@/contexts/AppContext';
 
 export const RecentFieldReportsList = () => {
-  const { setCurrentPage, openModal } = useApp();
+  const { setCurrentPage, openModal, reports } = useApp();
+  const displayList = reports && reports.length > 0 ? reports.slice(0, 3) : [];
 
   return (
     <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -17,7 +17,7 @@ export const RecentFieldReportsList = () => {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, overflowY: 'auto' }}>
-        {RECENT_FIELD_REPORTS.map((rep) => (
+        {displayList.map((rep) => (
           <div
             key={rep.id}
             onClick={() => openModal('reportDetail', rep)}
@@ -34,9 +34,12 @@ export const RecentFieldReportsList = () => {
             }}
           >
             <img
-              src={rep.image}
-              alt={rep.title}
+              src={rep.image || '/assets/field-reports/landslide.jpg'}
+              alt={rep.title || rep.type}
               className="report-thumbnail"
+              onError={(e) => {
+                e.target.src = '/assets/field-reports/landslide.jpg';
+              }}
             />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div
@@ -49,7 +52,7 @@ export const RecentFieldReportsList = () => {
                   textOverflow: 'ellipsis',
                 }}
               >
-                {rep.title}
+                {rep.title || rep.description || rep.type}
               </div>
               <div
                 style={{
@@ -58,10 +61,11 @@ export const RecentFieldReportsList = () => {
                   justifyContent: 'space-between',
                   marginTop: '2px',
                   fontSize: '11px',
+                  color: 'var(--text-muted)',
                 }}
               >
-                <span style={{ color: 'var(--text-muted)' }}>{rep.time}</span>
-                <span style={{ color: 'var(--primary-600)', fontWeight: 500 }}>{rep.location}</span>
+                <span>{rep.location}</span>
+                <span>{rep.reportedOn || rep.time || 'Today'}</span>
               </div>
             </div>
           </div>

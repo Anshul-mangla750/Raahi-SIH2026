@@ -1,49 +1,28 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-
-const DEMO_USERS = {
-  user: {
-    id: "usr_ner_001",
-    name: "Arun Sharma",
-    emailOrPhone: "arun.sharma@northeastlogistics.in",
-    role: "user",
-    roleTitle: "Consignee / Citizen User",
-    agency: "Assam Essential Supplies",
-  },
-  official: {
-    id: "gov_ner_709",
-    name: "Debashis Hazarika",
-    emailOrPhone: "d.hazarika@nhidcl.gov.in",
-    role: "official",
-    roleTitle: "NHIDCL Field Officer",
-    agency: "Ministry of Road Transport & Highways (NER)",
-  },
-  operator: {
-    id: "ops_ner_404",
-    name: "Pranab Gogoi",
-    emailOrPhone: "pranab@brahmaputrafleet.com",
-    role: "operator",
-    roleTitle: "Fleet Operations Manager",
-    agency: "Brahmaputra Heavy Freight Corridor",
-  },
-};
+import ApiClient from "../lib/api";
 
 const AuthContext = createContext(undefined);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeRoleTab, setActiveRoleTab] = useState("user");
+  const [activeRoleTab, setActiveRoleTab] = useState("official");
 
   useEffect(() => {
     const savedUser = localStorage.getItem("ner_logismart_user") || sessionStorage.getItem("ner_logismart_user");
-    if (savedUser) {
+    const token = localStorage.getItem("ner_access_token") || sessionStorage.getItem("ner_access_token");
+
+    if (savedUser && token) {
       try {
         const parsed = JSON.parse(savedUser);
         setUser(parsed);
         if (parsed.role) setActiveRoleTab(parsed.role);
       } catch (e) {
         console.error("Failed to parse saved user", e);
+        logout();
       }
+    } else {
+      logout();
     }
   }, []);
 
@@ -59,84 +38,62 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (role, identifier, password, rememberMe = true) => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    setIsLoading(false);
 
-    if (!identifier.trim()) {
-      return { success: false, message: "Please enter your email or phone number." };
+    try {
+      // Real JWT Authentication with PostgreSQL / Backend
+      const res = await ApiClient.login(identifier, password);
+
+      if (res && res.success && res.data) {
+        const { user: apiUser, accessToken, refreshToken } = res.data;
+        ApiClient.setTokens(accessToken, refreshToken, rememberMe);
+
+        const mappedRole =
+          apiUser.role === "admin" || apiUser.role === "district_officer"
+            ? "official"
+            : apiUser.role === "transporter" || apiUser.role === "driver"
+            ? "operator"
+            : "user";
+
+        const loggedInUser = {
+          id: apiUser.id,
+          name: apiUser.name,
+          emailOrPhone: apiUser.email || identifier,
+          role: mappedRole,
+          backendRole: apiUser.role,
+          roleTitle:
+            mappedRole === "official"
+              ? "Regional Command Officer"
+              : mappedRole === "operator"
+              ? "Fleet Operations Manager"
+              : "Consignee / Citizen User",
+          agency: apiUser.agency || (mappedRole === "official" ? "MDoNER Logistics Division" : "Brahmaputra Freight"),
+        };
+
+        saveUserSession(loggedInUser, rememberMe);
+        setIsLoading(false);
+        return { success: true, message: `Welcome back, ${loggedInUser.name}!` };
+      } else {
+        // Explicitly reject invalid credentials
+        setIsLoading(false);
+        return {
+          success: false,
+          message: res?.message || "Invalid email or password. Please check your credentials.",
+        };
+      }
+    } catch (err) {
+      setIsLoading(false);
+      return {
+        success: false,
+        message: "Unable to connect to authentication server. Please check your backend connection.",
+      };
     }
-
-    if (!password || password.length < 4) {
-      return { success: false, message: "Password must be at least 4 characters." };
-    }
-
-    const templateUser = DEMO_USERS[role] || DEMO_USERS.user;
-    const loggedInUser = {
-      ...templateUser,
-      emailOrPhone: identifier,
-      name: identifier.includes("@") ? identifier.split("@")[0].replace(".", " ") : templateUser.name,
-      role,
-    };
-
-    saveUserSession(loggedInUser, rememberMe);
-    return { success: true, message: `Welcome back, ${loggedInUser.name}!` };
   };
 
-  const sendOTP = async (phone) => {
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    const mockCode = "749281";
-    return { success: true, mockCode };
-  };
-
-  const loginWithOTP = async (phone, otp) => {
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 700));
-    setIsLoading(false);
-
-    if (otp.length !== 6) {
-      return { success: false, message: "Please enter a valid 6-digit OTP." };
-    }
-
-    const templateUser = DEMO_USERS[activeRoleTab] || DEMO_USERS.user;
-    const loggedInUser = {
-      ...templateUser,
-      emailOrPhone: phone,
-      name: `User (+91 ${phone.slice(-4)})`,
-      role: activeRoleTab,
-    };
-
-    saveUserSession(loggedInUser, true);
-    return { success: true, message: "OTP verified successfully!" };
-  };
-
-  const loginWithSocial = async (provider) => {
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 900));
-    setIsLoading(false);
-
-    const providerName = provider === "google" ? "Google" : "Microsoft Azure AD";
-    const loggedInUser = {
-      id: `${provider}_ner_${Date.now()}`,
-      name: provider === "google" ? "Northeast Explorer" : "Govt Enterprise User",
-      emailOrPhone: `auth_${provider}@ner-logismart.gov.in`,
-      role: activeRoleTab,
-      roleTitle: `${providerName} Authenticated Session`,
-      agency: activeRoleTab === "official" ? "Ministry of Development of North Eastern Region" : "Regional Logistics Cell",
-    };
-
-    saveUserSession(loggedInUser, true);
-    return { success: true, message: `Authenticated with ${providerName}` };
-  };
-
-  const resetPassword = async (identifier) => {
-    await new Promise((resolve) => setTimeout(resolve, 700));
-    return {
-      success: true,
-      message: `Password reset link sent to ${identifier}. Please check your inbox or SMS.`,
-    };
-  };
-
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await ApiClient.logout();
+    } catch (e) {}
+    ApiClient.clearTokens();
     setUser(null);
     localStorage.removeItem("ner_logismart_user");
     sessionStorage.removeItem("ner_logismart_user");
@@ -151,10 +108,6 @@ export const AuthProvider = ({ children }) => {
         activeRoleTab,
         setActiveRoleTab,
         login,
-        loginWithOTP,
-        loginWithSocial,
-        sendOTP,
-        resetPassword,
         logout,
       }}
     >

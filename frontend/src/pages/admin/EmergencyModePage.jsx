@@ -158,6 +158,22 @@ export const EmergencyModePage = () => {
                   <td>
                     <span className="badge badge-high">{sec.status}</span>
                   </td>
+                  <td style={{ textAlign: 'right' }}>
+                    <button
+                      className="btn btn-primary"
+                      style={{ padding: '4px 10px', fontSize: '11px', marginRight: '6px' }}
+                      onClick={() => addToast('Convoy Dispatched', `Emergency relief convoy dispatched to ${sec.sector}.`, 'success')}
+                    >
+                      Deploy Convoy
+                    </button>
+                    <button
+                      className="btn btn-outline"
+                      style={{ padding: '4px 10px', fontSize: '11px' }}
+                      onClick={() => addToast('Corridor Cleared', `Green corridor transit protocol enforced for ${sec.sector}.`, 'info')}
+                    >
+                      Clear Corridor
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

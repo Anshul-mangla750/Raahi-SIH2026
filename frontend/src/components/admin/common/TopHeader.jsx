@@ -20,10 +20,15 @@ import {
   CheckCircle2,
   SlidersHorizontal,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 export const TopHeader = () => {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const {
     sidebarCollapsed,
     setSidebarCollapsed,
@@ -45,6 +50,17 @@ export const TopHeader = () => {
   const searchContainerRef = useRef(null);
   const notificationRef = useRef(null);
   const profileRef = useRef(null);
+
+  const handleSignOut = async () => {
+    try {
+      setShowProfileMenu(false);
+      await logout();
+      toast.success('Signed out successfully');
+      navigate('/login');
+    } catch (e) {
+      navigate('/login');
+    }
+  };
 
   // Global Ctrl+K or Cmd+K shortcut to focus search
   useEffect(() => {
@@ -102,9 +118,9 @@ export const TopHeader = () => {
   const matchedReports = query
     ? (reports || []).filter(
         (r) =>
-          r.title?.toLowerCase().includes(query) ||
-          r.district?.toLowerCase().includes(query) ||
-          r.highway?.toLowerCase().includes(query)
+          r.type?.toLowerCase().includes(query) ||
+          r.location?.toLowerCase().includes(query) ||
+          r.id?.toLowerCase().includes(query)
       ).slice(0, 3)
     : [];
 
@@ -112,30 +128,33 @@ export const TopHeader = () => {
 
   return (
     <header className="top-header">
-      {/* Left Section: Sidebar Toggle & Smart Search */}
+      {/* Left Section: Sidebar Toggle & Search Input */}
       <div className="header-left">
         <button
-          className="toggle-sidebar-btn"
+          className="header-btn"
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          title={sidebarCollapsed ? 'Expand Navigation (Ctrl+\\)' : 'Collapse Navigation (Ctrl+\\)'}
-          aria-label="Toggle Sidebar"
+          title={sidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+          aria-label="Toggle navigation sidebar"
         >
-          <Menu size={19} />
+          <Menu size={20} />
         </button>
 
-        {/* Global Search Bar */}
-        <div className="search-bar-container" ref={searchContainerRef}>
+        {/* Global Search Bar with Autocomplete Dropdown */}
+        <div
+          className={`header-search-container ${isSearchFocused ? 'focused' : ''}`}
+          ref={searchContainerRef}
+        >
           <Search size={16} className="search-icon" />
           <input
             ref={searchInputRef}
             type="text"
-            className="search-input"
-            placeholder="Search routes, vehicles, districts, alerts..."
+            className="header-search-input"
+            placeholder="Search corridors, fleet vehicles, alerts (Ctrl + K)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
+            aria-label="Global quick search"
           />
-
           {searchQuery ? (
             <button
               className="search-clear-btn"
@@ -148,105 +167,135 @@ export const TopHeader = () => {
               <X size={14} />
             </button>
           ) : (
-            <span className="search-shortcut-badge">⌘K</span>
+            <div className="search-shortcut-badge">
+              <span>Ctrl</span>
+              <span>K</span>
+            </div>
           )}
 
-          {/* Instant Search Results Dropdown */}
+          {/* Quick Search Autocomplete Results Dropdown */}
           {isSearchFocused && query && (
-            <div className="search-dropdown-menu">
-              <div className="search-dropdown-header">
+            <div className="search-results-dropdown">
+              <div className="search-results-header">
                 <span>Quick Results ({totalResults})</span>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Press Esc to close</span>
+                <span className="search-hint">Press ESC to dismiss</span>
               </div>
 
-              <div className="search-dropdown-body">
-                {totalResults === 0 ? (
-                  <div className="search-no-results">
-                    <span>No matches found for "{searchQuery}"</span>
-                  </div>
-                ) : (
-                  <>
-                    {/* Vehicles */}
-                    {matchedVehicles.length > 0 && (
-                      <div className="search-result-group">
-                        <div className="search-group-title">
-                          <Truck size={12} />
-                          <span>Vehicles ({matchedVehicles.length})</span>
-                        </div>
-                        {matchedVehicles.map((v) => (
-                          <div
-                            key={v.id}
-                            className="search-result-item"
-                            onClick={() => {
-                              setCurrentPage('vehicle-tracking');
-                              setIsSearchFocused(false);
-                            }}
-                          >
-                            <span className="search-item-primary">{v.id}</span>
-                            <span className="search-item-secondary">{v.route} • {v.driver}</span>
-                          </div>
-                        ))}
+              {totalResults === 0 ? (
+                <div className="search-no-results">
+                  <p>No matching corridors, vehicles, or alerts found for "{searchQuery}"</p>
+                  <span className="search-subhint">Try searching by Vehicle ID (e.g. AS-01), Driver, or District.</span>
+                </div>
+              ) : (
+                <div className="search-results-scroll">
+                  {/* Vehicles Section */}
+                  {matchedVehicles.length > 0 && (
+                    <div className="search-result-group">
+                      <div className="search-group-title">
+                        <Truck size={13} />
+                        <span>Fleet Vehicles</span>
                       </div>
-                    )}
+                      {matchedVehicles.map((v) => (
+                        <div
+                          key={v.id}
+                          className="search-result-item"
+                          onClick={() => {
+                            setIsSearchFocused(false);
+                            setCurrentPage('vehicle-tracking');
+                          }}
+                        >
+                          <div className="result-item-main">
+                            <span className="result-primary">{v.id}</span>
+                            <span className="result-secondary">{v.driver} • {v.route}</span>
+                          </div>
+                          <span className={`badge badge-${v.statusClass || 'moving'}`}>
+                            {v.status}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
-                    {/* Alerts */}
-                    {matchedAlerts.length > 0 && (
-                      <div className="search-result-group">
-                        <div className="search-group-title">
-                          <AlertTriangle size={12} />
-                          <span>Alerts ({matchedAlerts.length})</span>
-                        </div>
-                        {matchedAlerts.map((a) => (
-                          <div
-                            key={a.id}
-                            className="search-result-item"
-                            onClick={() => {
-                              setCurrentPage('alerts');
-                              setIsSearchFocused(false);
-                            }}
-                          >
-                            <span className="search-item-primary">{a.title}</span>
-                            <span className="search-item-secondary">{a.location} • {a.time}</span>
-                          </div>
-                        ))}
+                  {/* Alerts Section */}
+                  {matchedAlerts.length > 0 && (
+                    <div className="search-result-group">
+                      <div className="search-group-title">
+                        <AlertTriangle size={13} />
+                        <span>Corridor Alerts</span>
                       </div>
-                    )}
+                      {matchedAlerts.map((a) => (
+                        <div
+                          key={a.id}
+                          className="search-result-item"
+                          onClick={() => {
+                            setIsSearchFocused(false);
+                            setCurrentPage('alerts');
+                          }}
+                        >
+                          <div className="result-item-main">
+                            <span className="result-primary">{a.title}</span>
+                            <span className="result-secondary">{a.location} • {a.time}</span>
+                          </div>
+                          <span className={`badge badge-${a.severityClass || 'medium'}`}>
+                            {a.severity}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
-                    {/* Field Reports */}
-                    {matchedReports.length > 0 && (
-                      <div className="search-result-group">
-                        <div className="search-group-title">
-                          <FileText size={12} />
-                          <span>Field Reports ({matchedReports.length})</span>
-                        </div>
-                        {matchedReports.map((r) => (
-                          <div
-                            key={r.id}
-                            className="search-result-item"
-                            onClick={() => {
-                              setCurrentPage('field-reports');
-                              setIsSearchFocused(false);
-                            }}
-                          >
-                            <span className="search-item-primary">{r.title || r.issueType}</span>
-                            <span className="search-item-secondary">{r.district} • {r.highway}</span>
-                          </div>
-                        ))}
+                  {/* Reports Section */}
+                  {matchedReports.length > 0 && (
+                    <div className="search-result-group">
+                      <div className="search-group-title">
+                        <FileText size={13} />
+                        <span>Field Incident Reports</span>
                       </div>
-                    )}
-                  </>
-                )}
+                      {matchedReports.map((r) => (
+                        <div
+                          key={r.id}
+                          className="search-result-item"
+                          onClick={() => {
+                            setIsSearchFocused(false);
+                            setCurrentPage('field-reports');
+                          }}
+                        >
+                          <div className="result-item-main">
+                            <span className="result-primary">{r.id}: {r.type}</span>
+                            <span className="result-secondary">{r.location}</span>
+                          </div>
+                          <span className={`badge badge-${r.status?.toLowerCase() || 'pending'}`}>
+                            {r.status}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="search-results-footer">
+                <button
+                  className="search-view-all-btn"
+                  onClick={() => {
+                    setIsSearchFocused(false);
+                    setCurrentPage('live-map');
+                  }}
+                >
+                  <span>Open GIS Live Map Navigator</span>
+                  <ExternalLink size={12} />
+                </button>
               </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* Center Section: Telemetry Status & Emergency Trigger */}
+      {/* Center Section: Live Status Pill & Emergency Action */}
       <div className="header-center">
-        <div className="corridor-status-pill">
-          <span className="pulse-dot-green" />
-          <span className="corridor-status-text">
+        <div className="corridor-status-pill" title="Real-time connectivity to DoNER logistics gateway">
+          <span className="corridor-pulse-dot" />
+          <span className="corridor-text">
             <strong>NER Logistics Grid</strong>
             <span className="corridor-subtext">• 312 Vehicles Active</span>
           </span>
@@ -363,7 +412,7 @@ export const TopHeader = () => {
               <span className="gov-online-dot" />
             </div>
             <div className="gov-profile-info">
-              <span className="gov-profile-title">Government Admin</span>
+              <span className="gov-profile-title">{user?.name || 'Government Admin'}</span>
               <span className="gov-profile-subtitle">Ministry of DoNER</span>
             </div>
             <ChevronDown
@@ -384,8 +433,8 @@ export const TopHeader = () => {
                   />
                 </div>
                 <div className="profile-details-lg">
-                  <strong>Logistics Operations Officer</strong>
-                  <span className="profile-email">admin.raahi@gov.in</span>
+                  <strong>{user?.name || 'Logistics Operations Officer'}</strong>
+                  <span className="profile-email">{user?.email || 'admin.raahi@gov.in'}</span>
                   <span className="profile-dept-tag">North Eastern Council (NEC)</span>
                 </div>
               </div>
@@ -420,10 +469,7 @@ export const TopHeader = () => {
               <div className="dropdown-menu-footer">
                 <button
                   className="dropdown-link-item danger"
-                  onClick={() => {
-                    setShowProfileMenu(false);
-                    openModal('support', { topic: 'Sign Out' });
-                  }}
+                  onClick={handleSignOut}
                 >
                   <LogOut size={15} />
                   <span>Sign Out Session</span>
@@ -436,4 +482,3 @@ export const TopHeader = () => {
     </header>
   );
 };
-

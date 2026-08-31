@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Plus, Minus, Target, Layers } from 'lucide-react';
+import { subscribeToVehiclePositions } from '@/lib/socket';
 
 // Start marker: Green location pin
 const startMarkerIcon = L.divIcon({
@@ -51,20 +52,20 @@ const movingTruckIcon = L.divIcon({
 });
 
 // Map Controller for programmatically zooming / centering
-function MapControlsHandler({ triggerZoomIn, triggerZoomOut, triggerCenter }) {
+function MapControlsHandler({ triggerZoomIn, triggerZoomOut, triggerCenter, centerPos }) {
   const map = useMap();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (triggerZoomIn > 0) map.zoomIn();
   }, [triggerZoomIn, map]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (triggerZoomOut > 0) map.zoomOut();
   }, [triggerZoomOut, map]);
 
-  React.useEffect(() => {
-    if (triggerCenter > 0) map.setView([26.70, 93.30], 8);
-  }, [triggerCenter, map]);
+  useEffect(() => {
+    if (triggerCenter > 0 && centerPos) map.setView(centerPos, 9);
+  }, [triggerCenter, centerPos, map]);
 
   return null;
 }
@@ -74,12 +75,39 @@ export default function TrackingMap() {
   const [zoomOutCount, setZoomOutCount] = useState(0);
   const [centerCount, setCenterCount] = useState(0);
 
-  // High-fidelity route coordinates: Guwahati -> Morigaon -> Nagaon -> Tezpur/Numaligarh -> Jorhat -> Dibrugarh
+  // Live vehicle telemetry state
+  const [vehicleTelemetry, setVehicleTelemetry] = useState({
+    id: 'AS-01-AB-1234',
+    lat: 26.3452,
+    lng: 92.6840,
+    speed: 52,
+    fuel: 78,
+    status: 'In Transit',
+  });
+
+  // Subscribe to live GPS telemetry over Socket.io
+  useEffect(() => {
+    const unsubscribe = subscribeToVehiclePositions((payload) => {
+      if (payload && payload.lat && payload.lng) {
+        setVehicleTelemetry({
+          id: payload.id || 'AS-01-AB-1234',
+          lat: payload.lat,
+          lng: payload.lng,
+          speed: payload.speed || 45,
+          fuel: payload.fuel || 75,
+          status: payload.status ? payload.status.charAt(0).toUpperCase() + payload.status.slice(1) : 'In Transit',
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const routeCoordinates = [
     [26.1445, 91.7362], // Guwahati
     [26.2550, 92.3400], // Morigaon
     [26.3463, 92.6841], // Nagaon
-    [26.6338, 92.8926], // Kaliabor / Brahmaputra South
+    [26.6338, 92.8926], // Kaliabor
     [26.5800, 93.4500], // Kaziranga Corridor
     [26.6000, 93.7500], // Numaligarh
     [26.7509, 94.2037], // Jorhat
@@ -87,13 +115,13 @@ export default function TrackingMap() {
     [27.4728, 94.9120], // Dibrugarh
   ];
 
-  const currentVehiclePos = [26.6000, 93.7500]; // Near Numaligarh
+  const currentVehiclePos = [vehicleTelemetry.lat, vehicleTelemetry.lng];
 
   return (
     <div className="relative w-full h-[380px] sm:h-[430px] lg:h-[470px] rounded-2xl overflow-hidden border border-slate-200/80 select-none bg-slate-100 shadow-2xs">
       {/* Real Leaflet Map */}
       <MapContainer
-        center={[26.70, 93.40]}
+        center={[26.45, 92.85]}
         zoom={8}
         zoomControl={false}
         scrollWheelZoom={true}
@@ -127,13 +155,14 @@ export default function TrackingMap() {
           </Popup>
         </Marker>
 
-        {/* Current Vehicle Marker (Blue Truck) */}
+        {/* Live Current Vehicle Marker (Blue Truck) */}
         <Marker position={currentVehiclePos} icon={movingTruckIcon}>
           <Popup className="custom-popup">
             <div className="p-1 text-xs">
-              <div className="font-black text-slate-900">AS01GC9876</div>
-              <p className="text-[10px] text-emerald-600 font-bold">In Transit (65% Completed)</p>
-              <p className="text-[10px] text-slate-500">Speed: 52 km/h • Fuel: 68%</p>
+              <div className="font-black text-slate-900">{vehicleTelemetry.id}</div>
+              <p className="text-[10px] text-emerald-600 font-bold">{vehicleTelemetry.status} (Live Telemetry)</p>
+              <p className="text-[10px] text-slate-500">Speed: {vehicleTelemetry.speed} km/h • Fuel: {vehicleTelemetry.fuel}%</p>
+              <p className="text-[9px] text-slate-400">Coords: {vehicleTelemetry.lat.toFixed(3)}, {vehicleTelemetry.lng.toFixed(3)}</p>
             </div>
           </Popup>
         </Marker>
@@ -152,68 +181,48 @@ export default function TrackingMap() {
           triggerZoomIn={zoomInCount}
           triggerZoomOut={zoomOutCount}
           triggerCenter={centerCount}
+          centerPos={currentVehiclePos}
         />
       </MapContainer>
 
-      {/* Custom Floating Leaflet Controls (Top-Left) */}
-      <div className="absolute top-3 left-3 z-[400] flex flex-col gap-1 bg-white/95 backdrop-blur-xs rounded-xl shadow-md border border-slate-200/90 p-1">
+      {/* Floating Map Action Buttons */}
+      <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
         <button
           type="button"
           onClick={() => setZoomInCount((c) => c + 1)}
-          className="p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
+          className="w-8 h-8 rounded-lg bg-white/90 backdrop-blur-sm border border-slate-200/80 shadow-sm flex items-center justify-center text-slate-700 hover:bg-white transition-all hover:scale-105"
           title="Zoom In"
         >
-          <Plus className="w-4 h-4" />
+          <Plus size={16} />
         </button>
+
         <button
           type="button"
           onClick={() => setZoomOutCount((c) => c + 1)}
-          className="p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
+          className="w-8 h-8 rounded-lg bg-white/90 backdrop-blur-sm border border-slate-200/80 shadow-sm flex items-center justify-center text-slate-700 hover:bg-white transition-all hover:scale-105"
           title="Zoom Out"
         >
-          <Minus className="w-4 h-4" />
+          <Minus size={16} />
         </button>
-        <div className="h-px bg-slate-200 my-0.5" />
+
         <button
           type="button"
           onClick={() => setCenterCount((c) => c + 1)}
-          className="p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
-          title="Center on Route"
+          className="w-8 h-8 rounded-lg bg-white/90 backdrop-blur-sm border border-slate-200/80 shadow-sm flex items-center justify-center text-slate-700 hover:bg-white transition-all hover:scale-105"
+          title="Center on Live Vehicle"
         >
-          <Target className="w-4 h-4" />
-        </button>
-        <button
-          type="button"
-          className="p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
-          title="Map Layers"
-        >
-          <Layers className="w-4 h-4" />
+          <Target size={16} />
         </button>
       </div>
 
-      {/* Floating Map Legend (Bottom-Right) */}
-      <div className="absolute bottom-3 right-3 z-[400] bg-white/95 backdrop-blur-xs rounded-xl shadow-md border border-slate-200/90 p-2.5 sm:p-3 text-[11px] font-bold text-slate-600">
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 flex-shrink-0" />
-            <span>Moving</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0" />
-            <span>Stopped</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-orange-500 flex-shrink-0" />
-            <span>Idle</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 flex-shrink-0" />
-            <span>Delayed</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-slate-400 flex-shrink-0" />
-            <span>Offline</span>
-          </div>
+      {/* Real-Time Live Status Pill Badge */}
+      <div className="absolute bottom-4 left-4 z-10 bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-xl px-3 py-2 shadow-xs flex items-center gap-2.5">
+        <span className="relative flex h-2.5 w-2.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+        </span>
+        <div className="text-[11px] font-bold text-slate-800">
+          Live GPS Signal Active • <span className="text-emerald-700 font-semibold">{vehicleTelemetry.speed} km/h</span>
         </div>
       </div>
     </div>

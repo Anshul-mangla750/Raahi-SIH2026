@@ -1,23 +1,51 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 import LoginTypeTabs from './LoginTypeTabs';
 import SocialLoginButtons from './SocialLoginButtons';
 import SecurityNotice from './SecurityNotice';
 
 export default function LoginForm() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('user');
+  const location = useLocation();
+  const { login, isLoading } = useAuth();
+  
+  const [activeTab, setActiveTab] = useState('official');
   const [showPassword, setShowPassword] = useState(false);
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (emailOrPhone.trim() && password.trim()) {
-      navigate('/transporter/dashboard');
+    if (!emailOrPhone.trim() || !password.trim()) {
+      toast.error('Please enter your credentials');
+      return;
+    }
+
+    const result = await login(activeTab, emailOrPhone, password, rememberMe);
+    if (result.success) {
+      toast.success(result.message);
+      
+      const destination = location.state?.from?.pathname;
+      if (destination) {
+        navigate(destination, { replace: true });
+        return;
+      }
+
+      // Default role routing
+      if (activeTab === 'official') {
+        navigate('/admin', { replace: true });
+      } else if (activeTab === 'operator') {
+        navigate('/transporter/dashboard', { replace: true });
+      } else {
+        navigate('/home', { replace: true });
+      }
+    } else {
+      toast.error(result.message || 'Login failed. Please check your credentials.');
     }
   };
 
@@ -26,28 +54,23 @@ export default function LoginForm() {
       {/* Top Scenic Logistics/Bridge Illustration */}
       <div className="w-full flex items-center justify-center mb-4">
         <svg viewBox="0 0 280 90" className="w-56 h-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Mountains background */}
           <path d="M40 70L80 20L120 70Z" fill="#E6F4EA" stroke="#A7D7B5" strokeWidth="1.2" />
           <path d="M90 70L145 12L200 70Z" fill="#F0FDF4" stroke="#86EFAC" strokeWidth="1.5" />
           <path d="M170 70L210 25L250 70Z" fill="#E6F4EA" stroke="#A7D7B5" strokeWidth="1.2" />
           
-          {/* Small trees/foliage */}
           <circle cx="50" cy="65" r="8" fill="#34D399" opacity="0.7" />
           <circle cx="62" cy="68" r="6" fill="#10B981" opacity="0.8" />
           <circle cx="230" cy="65" r="8" fill="#34D399" opacity="0.7" />
           <circle cx="242" cy="68" r="6" fill="#10B981" opacity="0.8" />
 
-          {/* Bridge structure */}
           <path d="M20 70H260" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" />
           <path d="M30 70C60 45, 110 45, 140 70" stroke="#059669" strokeWidth="1.5" fill="none" />
           <path d="M140 70C170 45, 220 45, 250 70" stroke="#059669" strokeWidth="1.5" fill="none" />
           
-          {/* Bridge pillars */}
           <line x1="85" y1="70" x2="85" y2="85" stroke="#94A3B8" strokeWidth="2" />
           <line x1="140" y1="70" x2="140" y2="85" stroke="#94A3B8" strokeWidth="2.5" />
           <line x1="195" y1="70" x2="195" y2="85" stroke="#94A3B8" strokeWidth="2" />
 
-          {/* Green Freight Truck on Bridge */}
           <g transform="translate(130, 48)">
             <rect x="0" y="4" width="36" height="18" rx="2" fill="#10B981" />
             <rect x="36" y="9" width="12" height="13" rx="2" fill="#047857" />
@@ -145,12 +168,22 @@ export default function LoginForm() {
         {/* Sign In CTA Button */}
         <motion.button
           type="submit"
+          disabled={isLoading}
           whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.950 }}
-          className="w-full py-3.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-md shadow-emerald-700/20 flex items-center justify-center gap-2 cursor-pointer transition-all focus:outline-none"
+          whileTap={{ scale: 0.98 }}
+          className="w-full py-3.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-md shadow-emerald-700/20 flex items-center justify-center gap-2 cursor-pointer transition-all focus:outline-none disabled:opacity-60"
         >
-          <span>Sign In</span>
-          <ArrowRight className="w-4 h-4" />
+          {isLoading ? (
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              <span>Signing In...</span>
+            </span>
+          ) : (
+            <>
+              <span>Sign In</span>
+              <ArrowRight className="w-4 h-4" />
+            </>
+          )}
         </motion.button>
       </form>
 

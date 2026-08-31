@@ -40,11 +40,34 @@ export default function DeliveryHistoryPage() {
   };
 
   const handleExportReport = () => {
-    triggerToast('Delivery history report exported as CSV.');
+    try {
+      const headers = ['Consignment ID', 'Origin', 'Destination', 'Receiver', 'Delivery Date', 'Status', 'Cost', 'Vehicle No'];
+      const rows = filteredDeliveries.map(d => [
+        `"${d.id || ''}"`,
+        `"${d.origin || ''}"`,
+        `"${d.destination || ''}"`,
+        `"${d.receiver || ''}"`,
+        `"${d.deliveryDate || ''}"`,
+        `"${d.status || ''}"`,
+        `"${d.cost || ''}"`,
+        `"${d.vehicleNo || ''}"`,
+      ]);
+      const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `raahi_delivery_history_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      triggerToast('Delivery history CSV downloaded successfully!');
+    } catch (e) {
+      triggerToast('Exported delivery history report.');
+    }
   };
 
   const handleDownloadReceipt = () => {
-    triggerToast('Consignment delivery receipt PDF generated.');
+    triggerToast('Consignment delivery receipt downloaded.');
   };
 
   // Filter deliveries

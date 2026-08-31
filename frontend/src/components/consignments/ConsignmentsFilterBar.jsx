@@ -4,9 +4,13 @@ import { Search } from 'lucide-react';
 export default function ConsignmentsFilterBar({
   activeTab,
   onTabChange,
+  setActiveTab,
   searchQuery,
   onSearchChange,
+  setSearchQuery,
 }) {
+  const handleTabChange = onTabChange || setActiveTab || (() => {});
+  const handleSearchChange = onSearchChange || setSearchQuery || (() => {});
   const tabs = [
     { id: 'all', label: 'All Consignments' },
     { id: 'in-transit', label: 'In Transit' },
@@ -26,7 +30,7 @@ export default function ConsignmentsFilterBar({
             <button
               key={tab.id}
               type="button"
-              onClick={() => onTabChange(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`pb-3 text-xs sm:text-sm font-bold tracking-tight transition-all relative whitespace-nowrap cursor-pointer ${
                 isActive
                   ? 'text-[#0D7A48] font-extrabold'
@@ -48,7 +52,7 @@ export default function ConsignmentsFilterBar({
         <input
           type="text"
           value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
+          onChange={(e) => handleSearchChange(e.target.value)}
           placeholder="Search by Consignment ID, From, To..."
           className="w-full pl-9.5 pr-4 py-2 rounded-xl bg-white border border-slate-200/90 text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-2xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
         />

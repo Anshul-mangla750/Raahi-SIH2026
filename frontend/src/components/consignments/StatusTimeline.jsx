@@ -1,7 +1,9 @@
 import React from 'react';
 import { Check, Truck, Clock } from 'lucide-react';
 
-export default function StatusTimeline({ timeline }) {
+export default function StatusTimeline({ timeline = [] }) {
+  if (!Array.isArray(timeline) || timeline.length === 0) return null;
+
   const renderIcon = (item) => {
     if (item.status === 'completed') {
       return (

@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import AdminDashboardApp from './pages/admin/AdminDashboardApp';
 import TransporterApp from './pages/Transporter/TransporterApp';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 export default function App() {
   return (
@@ -17,18 +18,34 @@ export default function App() {
         <AuthProvider>
           <BrowserRouter>
             <Routes>
-              {/* RAAHI Home / Landing Page */}
+              {/* Public RAAHI Home / Landing Page */}
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
 
-              {/* RAAHI Login Page */}
+              {/* Public Login Page */}
               <Route path="/login" element={<Login />} />
 
-              {/* Admin Dashboard Portal Routes */}
-              <Route path="/admin/*" element={<AdminDashboardApp />} />
+              {/* JWT Protected Admin Dashboard Routes */}
+              <Route
+                path="/admin/*"
+                element={
+                  <ProtectedRoute allowedRoles={['official', 'admin', 'district_officer']}>
+                    <AdminDashboardApp />
+                  </ProtectedRoute>
+                }
+              />
 
-              {/* Transporter Dashboard Hub Routes */}
-              <Route path="/transporter/*" element={<TransporterApp />} />
+              {/* JWT Protected Transporter Dashboard Hub Routes */}
+              <Route
+                path="/transporter/*"
+                element={
+                  <ProtectedRoute allowedRoles={['operator', 'transporter', 'driver', 'admin', 'official']}>
+                    <TransporterApp />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Quick Navigation Redirects with Route Protection */}
               <Route path="/dashboard" element={<Navigate to="/transporter/dashboard" replace />} />
               <Route path="/consignments" element={<Navigate to="/transporter/consignments" replace />} />
               <Route path="/vehicles" element={<Navigate to="/transporter/vehicles" replace />} />

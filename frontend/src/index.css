@@ -219,9 +219,9 @@ button {
 }
 
 .container {
-  width: min(100% - 3.5rem, 1280px);
+  width: min(100% - 3rem, 1200px);
   margin-inline: auto;
-  padding-inline: clamp(0.5rem, 1.5vw, 1.25rem);
+  padding-inline: clamp(0.5rem, 1.25vw, 1rem);
 }
 
 .site-shell {
@@ -232,11 +232,11 @@ button {
 
 .section {
   position: relative;
-  padding: clamp(3.8rem, 6vw, 5.8rem) 0;
+  padding: clamp(2.4rem, 4vw, 3.6rem) 0;
 }
 
 .section-tight {
-  padding: clamp(2.8rem, 5vw, 4.5rem) 0;
+  padding: clamp(1.6rem, 2.8vw, 2.4rem) 0;
 }
 
 .eyebrow,
@@ -247,17 +247,17 @@ button {
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: .65rem;
+  gap: .55rem;
   color: var(--forest);
-  font-size: .68rem;
-  letter-spacing: .16em;
+  font-size: .62rem;
+  letter-spacing: .14em;
   text-transform: uppercase;
   line-height: 1.2;
 }
 
 .eyebrow::before {
   content: "";
-  width: 1.9rem;
+  width: 1.4rem;
   height: 1px;
   background: currentColor;
   opacity: .7;
@@ -300,7 +300,7 @@ button {
 
 /* Hero Corridor Section */
 .hero-corridor {
-  min-height: 100vh;
+  min-height: clamp(520px, 82vh, 740px);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -388,28 +388,27 @@ button {
 .hero-corridor-container {
   position: relative;
   z-index: 10;
-  width: min(100% - 3.5rem, 1360px);
+  width: min(100% - 3rem, 1200px);
   margin-inline: auto;
-  padding-top: clamp(6.2rem, 11vh, 7.8rem);
-  padding-bottom: clamp(1.5rem, 3.5vh, 2.5rem);
+  padding-top: clamp(4.6rem, 7.5vh, 5.6rem);
+  padding-bottom: clamp(1rem, 2vh, 1.5rem);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
-  min-height: 100vh;
 }
 
 .hero-main-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2.5rem;
+  gap: 2rem;
   width: 100%;
   flex: 1;
 }
 
 .hero-corridor-copy {
-  max-width: 530px;
+  max-width: 480px;
   z-index: 15;
 }
 
@@ -417,20 +416,20 @@ button {
 .hero-live-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.35rem 0.85rem 0.35rem 0.65rem;
+  gap: 0.5rem;
+  padding: 0.28rem 0.72rem 0.28rem 0.55rem;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(8, 127, 77, 0.25);
-  box-shadow: 0 2px 10px rgba(8, 127, 77, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(8, 127, 77, 0.22);
+  box-shadow: 0 1px 6px rgba(8, 127, 77, 0.06);
   backdrop-filter: blur(8px);
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.85rem;
 }
 
 .badge-radar-dot {
   position: relative;
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.45rem;
+  height: 0.45rem;
   border-radius: 50%;
   background: #087f4d;
 }
@@ -446,29 +445,29 @@ button {
 
 .badge-live-text {
   font-family: "DM Mono", monospace;
-  font-size: 0.65rem;
+  font-size: 0.58rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.11em;
   color: #087f4d;
   text-transform: uppercase;
 }
 
 .badge-sep {
-  color: #94a3b8;
-  font-size: 0.75rem;
+  color: #cbd5e1;
+  font-size: 0.68rem;
 }
 
 .badge-sub-text {
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   font-weight: 600;
-  color: #475569;
+  color: #64748b;
 }
 
 /* Headline */
 .hero-corridor-headline {
-  margin: 0 0 1.25rem;
-  font-size: clamp(2.6rem, 4.4vw, 4.4rem);
-  line-height: 1.04;
+  margin: 0 0 0.85rem;
+  font-size: clamp(2rem, 3.2vw, 2.9rem);
+  line-height: 1.08;
   letter-spacing: -0.04em;
   font-weight: 800;
   color: #0f172a;
@@ -481,11 +480,11 @@ button {
 
 /* Description */
 .hero-corridor-desc {
-  max-width: 490px;
+  max-width: 440px;
   color: #475569;
-  font-size: clamp(0.92rem, 1.05vw, 1.05rem);
+  font-size: clamp(0.84rem, 0.95vw, 0.92rem);
   line-height: 1.55;
-  margin: 0 0 1.8rem;
+  margin: 0 0 1.25rem;
   font-weight: 500;
 }
 
@@ -494,41 +493,41 @@ button {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1.1rem;
-  margin-bottom: 2.4rem;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
 }
 
 .btn-hero-explore {
   background: #087f4d;
   color: #ffffff;
-  padding: 0.75rem 1.6rem;
+  padding: 0.58rem 1.35rem;
   border-radius: 9999px;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
   text-decoration: none;
-  box-shadow: 0 10px 24px rgba(8, 127, 77, 0.32);
+  box-shadow: 0 6px 18px rgba(8, 127, 77, 0.28);
   transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .btn-hero-explore:hover {
   background: #06663e;
   transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(8, 127, 77, 0.42);
+  box-shadow: 0 10px 24px rgba(8, 127, 77, 0.36);
 }
 
 .btn-hero-how {
   background: transparent;
   color: #334155;
-  padding: 0.65rem 1.1rem;
+  padding: 0.52rem 0.95rem;
   border-radius: 9999px;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.55rem;
   text-decoration: none;
   transition: all 0.2s ease;
 }
@@ -732,14 +731,14 @@ button {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.65rem 1.15rem 0.65rem 0.8rem;
-  border-radius: 1.1rem;
+  gap: 0.55rem;
+  padding: 0.42rem 0.85rem 0.42rem 0.6rem;
+  border-radius: 0.85rem;
   background: rgba(255, 255, 255, 0.94);
   border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(0, 0, 0, 0.02);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   cursor: pointer;
   transform: translateY(0);
   transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
@@ -747,15 +746,15 @@ button {
 }
 
 .telemetry-card:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 22px 48px rgba(15, 23, 42, 0.16);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
   background: #ffffff;
 }
 
 .telemetry-icon-box {
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 0.75rem;
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 0.55rem;
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -777,16 +776,16 @@ button {
 }
 
 .telemetry-label {
-  font-size: 0.68rem;
+  font-size: 0.58rem;
   font-weight: 600;
   color: #64748b;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .telemetry-status {
-  font-size: 0.84rem;
+  font-size: 0.74rem;
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.15;
   margin-top: 1px;
 }
 
@@ -802,13 +801,13 @@ button {
 .signal-meter {
   display: flex;
   align-items: flex-end;
-  gap: 2.5px;
-  height: 14px;
-  margin-left: 0.35rem;
+  gap: 2px;
+  height: 12px;
+  margin-left: 0.25rem;
 }
 
 .signal-bar {
-  width: 3px;
+  width: 2.5px;
   border-radius: 1px;
 }
 
@@ -838,26 +837,26 @@ button {
 
 .waypoint-badge {
   position: relative;
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 1.25rem;
+  height: 1.25rem;
   border-radius: 50%;
   background: #087f4d;
   color: white;
   display: grid;
   place-items: center;
-  box-shadow: 0 4px 12px rgba(8, 127, 77, 0.45);
+  box-shadow: 0 3px 10px rgba(8, 127, 77, 0.4);
   transition: transform 0.2s ease;
 }
 
 .waypoint-badge:hover {
-  transform: scale(1.2);
+  transform: scale(1.15);
 }
 
 .waypoint-pulse-ring {
   position: absolute;
-  inset: -6px;
+  inset: -5px;
   border-radius: 50%;
-  border: 1.5px solid #10b981;
+  border: 1.2px solid #10b981;
   animation: radarPing 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
@@ -868,7 +867,7 @@ button {
 .hero-bottom-metrics-wrap {
   width: 100%;
   margin-top: auto;
-  padding-top: 1.5rem;
+  padding-top: 1rem;
   z-index: 20;
 }
 
@@ -877,25 +876,25 @@ button {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-items: center;
-  padding: 1.25rem 2rem;
-  border-radius: 1.75rem;
+  padding: 0.75rem 1.4rem;
+  border-radius: 1.15rem;
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08), 0 2px 10px rgba(0, 0, 0, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(0, 0, 0, 0.02);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .metric-item-col {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding-inline: 0.75rem;
+  gap: 0.75rem;
+  padding-inline: 0.5rem;
 }
 
 .metric-icon-badge {
-  width: 3.1rem;
-  height: 3.1rem;
+  width: 2.35rem;
+  height: 2.35rem;
   border-radius: 50%;
   background: #eaf6ef;
   color: #087f4d;
@@ -910,7 +909,7 @@ button {
 }
 
 .metric-number {
-  font-size: clamp(1.35rem, 1.8vw, 1.75rem);
+  font-size: clamp(1.1rem, 1.4vw, 1.4rem);
   font-weight: 800;
   letter-spacing: -0.03em;
   color: #0f172a;
@@ -919,11 +918,11 @@ button {
 
 .metric-label {
   font-family: "DM Mono", monospace;
-  font-size: 0.58rem;
+  font-size: 0.52rem;
   font-weight: 700;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.08em;
   color: #64748b;
-  margin-top: 0.25rem;
+  margin-top: 0.15rem;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -1230,17 +1229,17 @@ button {
 
 .intro-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(260px, .75fr);
-  gap: clamp(2.5rem, 6vw, 6rem);
+  grid-template-columns: minmax(0, 1.25fr) minmax(240px, .75fr);
+  gap: clamp(1.5rem, 3.5vw, 3.5rem);
   align-items: end;
 }
 
 .display-heading {
-  margin: 1.2rem 0 0;
-  max-width: 760px;
+  margin: 0.75rem 0 0;
+  max-width: 720px;
   color: var(--forest-deep);
-  font-size: clamp(1.85rem, 3.2vw, 2.85rem);
-  line-height: 1.15;
+  font-size: clamp(1.4rem, 2.1vw, 1.95rem);
+  line-height: 1.18;
   letter-spacing: -.035em;
   font-weight: 800;
 }
@@ -1252,41 +1251,42 @@ button {
 .intro-note {
   max-width: 340px;
   color: #557069;
-  font-size: 0.88rem;
-  line-height: 1.65;
+  font-size: 0.82rem;
+  line-height: 1.55;
 }
 
 .intro-note strong {
   display: block;
-  margin-bottom: .65rem;
+  margin-bottom: .45rem;
   color: var(--forest-ink);
-  font: 700 .7rem "DM Mono", monospace;
+  font: 700 .65rem "DM Mono", monospace;
   letter-spacing: .08em;
 }
 
 .signal-rail {
   display: flex;
   align-items: center;
-  gap: .8rem;
-  margin-top: 2rem;
+  gap: .65rem;
+  margin-top: 1.1rem;
   color: var(--forest);
-  font: .62rem "DM Mono", monospace;
+  font: .58rem "DM Mono", monospace;
   letter-spacing: .12em;
   text-transform: uppercase;
 }
 
 .signal-rail::before {
   content: "";
-  width: 4rem;
+  width: 2.5rem;
   height: 1px;
   background: var(--forest);
 }
 
 .route-section {
-  min-height: 860px;
+  min-height: auto;
   color: white;
   background: var(--forest-deep);
   overflow: hidden;
+  padding: clamp(2.4rem, 4vw, 3.6rem) 0;
 }
 
 .route-section::after {
@@ -1303,7 +1303,7 @@ button {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .route-header .eyebrow {
@@ -1311,11 +1311,11 @@ button {
 }
 
 .route-heading {
-  margin: 1.2rem 0 0;
+  margin: 0.75rem 0 0;
   max-width: 630px;
   color: white;
-  font-size: clamp(1.85rem, 3.2vw, 2.85rem);
-  line-height: 1.12;
+  font-size: clamp(1.4rem, 2.1vw, 1.95rem);
+  line-height: 1.18;
   letter-spacing: -.035em;
   font-weight: 800;
 }
@@ -1326,21 +1326,21 @@ button {
 }
 
 .route-copy {
-  max-width: 340px;
+  max-width: 320px;
   color: rgba(255, 255, 255, .68);
-  font-size: .86rem;
-  line-height: 1.6;
+  font-size: .82rem;
+  line-height: 1.55;
 }
 
 .route-stage {
   position: relative;
   z-index: 2;
-  height: 640px;
-  margin-top: 2.2rem;
+  height: 440px;
+  margin-top: 1.4rem;
   border: 1px solid rgba(174, 237, 194, .22);
-  border-radius: 1.8rem;
+  border-radius: 1.15rem;
   background: #07261d;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, .6), inset 0 1px rgba(255, 255, 255, .1);
+  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, .55), inset 0 1px rgba(255, 255, 255, .1);
   overflow: hidden;
 }
 
@@ -2244,26 +2244,26 @@ button {
   background: #f4f6f0;
   position: relative;
   overflow: hidden;
-  padding: clamp(5rem, 8vw, 8.5rem) 0;
+  padding: clamp(2.4rem, 4vw, 3.6rem) 0;
 }
 
 .problems-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 3rem;
+  gap: 2rem;
   position: relative;
   z-index: 2;
 }
 
 .problems-title-wrap {
-  max-width: 580px;
+  max-width: 540px;
 }
 
 .problems-heading {
   margin: 0;
-  font-size: clamp(1.85rem, 3.2vw, 2.85rem);
-  line-height: 1.12;
+  font-size: clamp(1.4rem, 2.1vw, 1.95rem);
+  line-height: 1.15;
   letter-spacing: -0.035em;
   font-weight: 800;
   color: #0d2820;
@@ -2274,27 +2274,27 @@ button {
 }
 
 .heading-underline-bar {
-  width: 3rem;
-  height: 3px;
+  width: 2.2rem;
+  height: 2.5px;
   background: #087f4d;
-  margin-top: 0.85rem;
+  margin-top: 0.55rem;
   border-radius: 99px;
 }
 
 .problems-intro {
   max-width: 440px;
-  margin-top: 1rem;
+  margin-top: 0.65rem;
   margin-bottom: 0;
   color: #526f67;
-  font-size: 0.88rem;
-  line-height: 1.6;
+  font-size: 0.82rem;
+  line-height: 1.55;
 }
 
 /* Right Decorative Highway with Glowing Waypoints and HUD Card */
 .problems-road-decor {
   position: relative;
-  width: clamp(280px, 35vw, 460px);
-  height: 220px;
+  width: clamp(220px, 28vw, 340px);
+  height: 140px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -2304,20 +2304,20 @@ button {
 .problems-road-svg {
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 8px 24px rgba(8, 127, 77, 0.12));
+  filter: drop-shadow(0 4px 16px rgba(8, 127, 77, 0.1));
 }
 
 .problems-hud-tag {
   position: absolute;
-  top: 12%;
-  right: 8%;
+  top: 10%;
+  right: 6%;
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  padding: 0.5rem 0.85rem 0.5rem 0.75rem;
-  border-radius: 0.75rem;
+  gap: 0.45rem;
+  padding: 0.38rem 0.65rem;
+  border-radius: 0.65rem;
   background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.03);
   backdrop-filter: blur(12px);
   overflow: hidden;
   border: 1px solid rgba(8, 127, 77, 0.1);
@@ -2325,14 +2325,11 @@ button {
 }
 
 @keyframes floatSubtle {
-
-  0%,
-  100% {
+  0%, 100% {
     transform: translateY(0);
   }
-
   50% {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
   }
 }
 
@@ -2341,7 +2338,7 @@ button {
   left: 0;
   top: 0;
   bottom: 0;
-  width: 3px;
+  width: 2.5px;
   background: #ef4444;
 }
 
@@ -2358,7 +2355,7 @@ button {
 
 .hud-tag-title {
   font-family: "DM Mono", monospace;
-  font-size: 0.52rem;
+  font-size: 0.48rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   color: #111827;
@@ -2367,41 +2364,42 @@ button {
 }
 
 .hud-tag-sub {
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 600;
   color: #4b5563;
   line-height: 1.1;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 /* 4-Column Card Grid */
 .problem-cards-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.15rem;
-  margin-top: 3.5rem;
+  gap: 0.85rem;
+  margin-top: 1.6rem;
   position: relative;
   z-index: 2;
 }
 
 .challenge-card {
   position: relative;
-  min-height: 400px;
+  min-height: 270px;
+  max-height: 295px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   border: 1px solid rgba(8, 127, 77, 0.14);
-  border-radius: 1.25rem;
+  border-radius: 0.95rem;
   background: #ffffff;
-  box-shadow: 0 10px 28px rgba(4, 30, 22, 0.05);
+  box-shadow: 0 6px 20px rgba(4, 30, 22, 0.04);
   overflow: hidden;
-  padding: 1.45rem 1.4rem 1.3rem;
+  padding: 1.1rem 1rem 0.95rem;
   transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .challenge-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 24px 50px rgba(4, 30, 22, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(4, 30, 22, 0.1);
   border-color: rgba(8, 127, 77, 0.28);
 }
 
@@ -2421,7 +2419,7 @@ button {
   right: 0;
   bottom: 0;
   width: 100%;
-  height: 66%;
+  height: 60%;
   object-fit: cover;
   object-position: center bottom;
   filter: contrast(1.06) saturate(1.1);
@@ -2431,7 +2429,7 @@ button {
 }
 
 .challenge-card:hover .challenge-backdrop-photo {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 /* Continuous Mist Overlay */
@@ -2453,7 +2451,7 @@ button {
   background-image: url("/topography.jpg");
   background-position: center top;
   background-size: 135%;
-  opacity: 0.34;
+  opacity: 0.28;
   mix-blend-mode: multiply;
   -webkit-mask-image: linear-gradient(to bottom, black 0%, black 46%, rgba(0, 0, 0, 0.35) 62%, transparent 82%);
   mask-image: linear-gradient(to bottom, black 0%, black 46%, rgba(0, 0, 0, 0.35) 62%, transparent 82%);
@@ -2462,13 +2460,13 @@ button {
 /* Concentric Orbital Partition Rings */
 .challenge-partition-orb {
   position: absolute;
-  right: -2.8rem;
-  top: 1.8rem;
-  width: 9.8rem;
-  height: 9.8rem;
-  border: 1.2px solid rgba(8, 127, 77, 0.28);
+  right: -2rem;
+  top: 1.2rem;
+  width: 7.5rem;
+  height: 7.5rem;
+  border: 1px solid rgba(8, 127, 77, 0.24);
   border-radius: 50%;
-  opacity: 0.85;
+  opacity: 0.8;
   pointer-events: none;
   transition: transform 0.4s ease;
 }
@@ -2476,21 +2474,21 @@ button {
 .challenge-partition-orb::before {
   content: "";
   position: absolute;
-  inset: 1.6rem;
-  border: 1px solid rgba(8, 127, 77, 0.22);
+  inset: 1.2rem;
+  border: 1px solid rgba(8, 127, 77, 0.18);
   border-radius: 50%;
 }
 
 .challenge-partition-orb::after {
   content: "";
   position: absolute;
-  inset: 3.2rem;
-  border: 1px dashed rgba(8, 127, 77, 0.2);
+  inset: 2.4rem;
+  border: 1px dashed rgba(8, 127, 77, 0.16);
   border-radius: 50%;
 }
 
 .challenge-card:hover .challenge-partition-orb {
-  transform: scale(1.12) rotate(15deg);
+  transform: scale(1.08) rotate(12deg);
 }
 
 /* Category Specific Orbital Colors */
@@ -2532,7 +2530,7 @@ button {
   z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.45rem;
 }
 
 .challenge-meta-row {
@@ -2543,17 +2541,17 @@ button {
 
 .challenge-index {
   font-family: "DM Mono", monospace;
-  font-size: 0.62rem;
+  font-size: 0.56rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: #087f4d;
 }
 
 .challenge-tag {
   font-family: "DM Mono", monospace;
-  font-size: 0.52rem;
+  font-size: 0.48rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -2574,20 +2572,20 @@ button {
 }
 
 .challenge-icon-wrap {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   display: grid;
   place-items: center;
-  border-radius: 0.65rem;
+  border-radius: 0.55rem;
   background: #edf7f0;
   color: #087f4d;
   border: 1px solid rgba(8, 127, 77, 0.14);
-  margin-top: 0.2rem;
+  margin-top: 0.1rem;
 }
 
 .challenge-title {
-  margin: 0.35rem 0 0;
-  font-size: 1.05rem;
+  margin: 0.2rem 0 0;
+  font-size: 0.92rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   color: #09281f;
@@ -2597,23 +2595,23 @@ button {
 .challenge-desc {
   margin: 0;
   color: #557069;
-  font-size: 0.78rem;
-  line-height: 1.5;
-  min-height: 2.35rem;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  min-height: auto;
 }
 
 /* Bottom Action Button Area */
 .challenge-card-bottom {
   position: relative;
   z-index: 2;
-  margin-top: 1.8rem;
+  margin-top: 1rem;
   display: flex;
   align-items: center;
 }
 
 .challenge-action-btn {
-  width: 2.15rem;
-  height: 2.15rem;
+  width: 1.85rem;
+  height: 1.85rem;
   border-radius: 50%;
   background: #083424;
   border: 1px solid rgba(255, 255, 255, 0.35);
@@ -2621,7 +2619,7 @@ button {
   display: grid;
   place-items: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -2629,8 +2627,8 @@ button {
 .challenge-card:hover .challenge-action-btn {
   background: #10b981;
   color: #031c15;
-  transform: scale(1.08);
-  box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+  transform: scale(1.06);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
 }
 
 /* Responsive adjustments */
@@ -2672,11 +2670,19 @@ button {
   z-index: 2;
 }
 
+.platform-top p {
+  margin: 0;
+  max-width: 320px;
+  color: #557069;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
 .platform-heading {
-  margin: 1.2rem 0 0;
-  max-width: 780px;
-  font-size: clamp(1.85rem, 3.2vw, 2.85rem);
-  line-height: 1.12;
+  margin: 0.75rem 0 0;
+  max-width: 650px;
+  font-size: clamp(1.4rem, 2.1vw, 1.95rem);
+  line-height: 1.18;
   letter-spacing: -0.035em;
   font-weight: 800;
   color: #0d2820;
@@ -2687,42 +2693,34 @@ button {
   font-style: normal;
 }
 
-.platform-top p {
-  max-width: 300px;
-  margin: 0 0 0.35rem 0;
-  color: #557069;
-  font-size: 0.88rem;
-  line-height: 1.6;
-}
-
 .feature-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.15rem;
-  margin-top: 4.5rem;
+  gap: 0.85rem;
+  margin-top: 1.6rem;
   position: relative;
   z-index: 2;
 }
 
 .feature-card {
   position: relative;
-  min-height: 390px;
+  min-height: 260px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   border: 1px solid rgba(8, 127, 77, 0.14);
-  border-radius: 1.25rem;
+  border-radius: 0.95rem;
   background: #ffffff;
-  box-shadow: 0 10px 28px rgba(4, 30, 22, 0.05);
+  box-shadow: 0 6px 20px rgba(4, 30, 22, 0.04);
   overflow: hidden;
-  padding: 1.45rem 1.4rem 1.3rem;
+  padding: 1.1rem 1rem 0.95rem;
   transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 24px 50px rgba(4, 30, 22, 0.12);
-  border-color: rgba(8, 127, 77, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(4, 30, 22, 0.1);
+  border-color: rgba(8, 127, 77, 0.28);
 }
 
 /* Feature Backdrop with Seamless Multi-Stop Mist Blend (Matching Previous Section) */
@@ -2740,7 +2738,7 @@ button {
   right: 0;
   bottom: 0;
   width: 100%;
-  height: 65%;
+  height: 60%;
   object-fit: cover;
   object-position: center bottom;
   filter: contrast(1.06) saturate(1.1);
@@ -2750,7 +2748,7 @@ button {
 }
 
 .feature-card:hover .feature-backdrop-photo {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 .feature-backdrop-mist {
@@ -2770,7 +2768,7 @@ button {
   background-image: url("/topography.jpg");
   background-position: center top;
   background-size: 135%;
-  opacity: 0.32;
+  opacity: 0.28;
   mix-blend-mode: multiply;
   -webkit-mask-image: linear-gradient(to bottom, black 0%, black 46%, rgba(0, 0, 0, 0.35) 62%, transparent 82%);
   mask-image: linear-gradient(to bottom, black 0%, black 46%, rgba(0, 0, 0, 0.35) 62%, transparent 82%);
@@ -2778,13 +2776,13 @@ button {
 
 .feature-partition-orb {
   position: absolute;
-  right: -2.8rem;
-  top: 1.8rem;
-  width: 9.8rem;
-  height: 9.8rem;
-  border: 1.2px solid rgba(8, 127, 77, 0.28);
+  right: -2rem;
+  top: 1.2rem;
+  width: 7.5rem;
+  height: 7.5rem;
+  border: 1px solid rgba(8, 127, 77, 0.24);
   border-radius: 50%;
-  opacity: 0.85;
+  opacity: 0.8;
   pointer-events: none;
   transition: transform 0.4s ease;
 }
@@ -2792,21 +2790,21 @@ button {
 .feature-partition-orb::before {
   content: "";
   position: absolute;
-  inset: 1.6rem;
-  border: 1px solid rgba(8, 127, 77, 0.22);
+  inset: 1.2rem;
+  border: 1px solid rgba(8, 127, 77, 0.18);
   border-radius: 50%;
 }
 
 .feature-partition-orb::after {
   content: "";
   position: absolute;
-  inset: 3.2rem;
-  border: 1px dashed rgba(8, 127, 77, 0.2);
+  inset: 2.4rem;
+  border: 1px dashed rgba(8, 127, 77, 0.16);
   border-radius: 50%;
 }
 
 .feature-card:hover .feature-partition-orb {
-  transform: scale(1.12) rotate(15deg);
+  transform: scale(1.08) rotate(12deg);
 }
 
 /* Feature Foreground Content */
@@ -2815,7 +2813,7 @@ button {
   z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.45rem;
 }
 
 .feature-signal {
@@ -2823,8 +2821,8 @@ button {
   align-items: center;
   gap: 0.45rem;
   color: #087f4d;
-  font: 700 0.54rem "DM Mono", monospace;
-  letter-spacing: 0.12em;
+  font: 700 0.52rem "DM Mono", monospace;
+  letter-spacing: 0.1em;
 }
 
 .feature-signal i {
@@ -2834,32 +2832,32 @@ button {
 }
 
 .feature-icon {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   display: grid;
   place-items: center;
-  border-radius: 0.65rem;
+  border-radius: 0.55rem;
   color: #087f4d;
   background: #edf7f0;
-  border: 1px solid rgba(8, 127, 77, 0.15);
-  margin-top: 0.15rem;
+  border: 1px solid rgba(8, 127, 77, 0.14);
+  margin-top: 0.1rem;
 }
 
 .feature-body-text {
-  margin-top: 0.15rem;
+  margin-top: 0.1rem;
 }
 
 .feature-no {
   color: #087f4d;
-  font: 700 0.58rem "DM Mono", monospace;
+  font: 700 0.54rem "DM Mono", monospace;
   letter-spacing: 0.1em;
   display: block;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.15rem;
 }
 
 .feature-card h3 {
-  margin: 0 0 0.4rem;
-  font-size: 1.05rem;
+  margin: 0 0 0.25rem;
+  font-size: 0.92rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   color: #09281f;
@@ -2869,22 +2867,22 @@ button {
 .feature-card p {
   margin: 0;
   color: #557069;
-  font-size: 0.78rem;
-  line-height: 1.5;
-  min-height: 2.35rem;
+  font-size: 0.74rem;
+  line-height: 1.42;
+  min-height: auto;
 }
 
 .feature-card-bottom {
   position: relative;
   z-index: 2;
-  margin-top: 1.8rem;
+  margin-top: 1rem;
   display: flex;
   align-items: center;
 }
 
 .feature-action-btn {
-  width: 2.15rem;
-  height: 2.15rem;
+  width: 1.85rem;
+  height: 1.85rem;
   border-radius: 50%;
   background: #083424;
   border: 1px solid rgba(255, 255, 255, 0.35);
@@ -2892,7 +2890,7 @@ button {
   display: grid;
   place-items: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -2900,8 +2898,8 @@ button {
 .feature-card:hover .feature-action-btn {
   background: #10b981;
   color: #031c15;
-  transform: scale(1.08);
-  box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+  transform: scale(1.06);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
 }
 
 @media (max-width: 1024px) {
@@ -2928,10 +2926,10 @@ button {
 }
 
 .timeline-heading {
-  margin: 1.2rem 0 0;
+  margin: 0.75rem 0 0;
   max-width: 630px;
-  font-size: clamp(1.85rem, 3.2vw, 2.85rem);
-  line-height: 1.12;
+  font-size: clamp(1.4rem, 2.1vw, 1.95rem);
+  line-height: 1.18;
   letter-spacing: -.035em;
   font-weight: 800;
 }
@@ -2939,22 +2937,22 @@ button {
 .timeline-top p {
   max-width: 270px;
   color: #557069;
-  font-size: .86rem;
-  line-height: 1.6;
+  font-size: .82rem;
+  line-height: 1.55;
 }
 
 .steps {
   position: relative;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin-top: 4rem;
+  gap: 0.85rem;
+  margin-top: 1.85rem;
 }
 
 .steps::before {
   content: "";
   position: absolute;
-  top: 1rem;
+  top: 0.9rem;
   right: 7%;
   left: 7%;
   height: 1px;
@@ -2963,7 +2961,7 @@ button {
 
 .steps-spine {
   position: absolute;
-  top: 1rem;
+  top: 0.9rem;
   right: 7%;
   left: 7%;
   z-index: 0;
@@ -2980,20 +2978,20 @@ button {
 }
 
 .step-marker {
-  width: 2rem;
-  height: 2rem;
+  width: 1.75rem;
+  height: 1.75rem;
   display: grid;
   place-items: center;
   border: 1px solid var(--forest);
   border-radius: 50%;
   color: var(--forest);
   background: #f0f4ee;
-  font: .63rem "DM Mono", monospace;
+  font: .58rem "DM Mono", monospace;
 }
 
 .step h3 {
-  margin: 1.4rem 0 .45rem;
-  font-size: 0.98rem;
+  margin: 0.85rem 0 .3rem;
+  font-size: 0.88rem;
   font-weight: 800;
   letter-spacing: -.03em;
 }
@@ -3002,20 +3000,21 @@ button {
   max-width: 210px;
   margin: 0;
   color: #557069;
-  font-size: .8rem;
-  line-height: 1.5;
+  font-size: .75rem;
+  line-height: 1.45;
 }
 
 .command {
   color: white;
   background: var(--forest-deep);
+  padding: clamp(2.4rem, 4vw, 3.6rem) 0;
 }
 
 .command-top {
   display: flex;
   align-items: end;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .command .eyebrow {
@@ -3023,10 +3022,10 @@ button {
 }
 
 .command-heading {
-  margin: 1.2rem 0 0;
-  max-width: 770px;
-  font-size: clamp(1.85rem, 3.2vw, 2.85rem);
-  line-height: 1.12;
+  margin: 0.75rem 0 0;
+  max-width: 720px;
+  font-size: clamp(1.4rem, 2.1vw, 1.95rem);
+  line-height: 1.18;
   letter-spacing: -.035em;
   font-weight: 800;
 }
@@ -3040,28 +3039,28 @@ button {
   max-width: 260px;
   margin-bottom: .25rem;
   color: rgba(255, 255, 255, .62);
-  font-size: .86rem;
-  line-height: 1.6;
+  font-size: .82rem;
+  line-height: 1.55;
 }
 
 .command-shell {
   position: relative;
   display: grid;
-  grid-template-columns: 1.3fr .7fr;
-  gap: .9rem;
-  margin-top: 3.8rem;
-  padding: .9rem;
-  border: 1px solid rgba(174, 237, 194, .24);
-  border-radius: 1.5rem;
+  grid-template-columns: 1.35fr .65fr;
+  gap: .65rem;
+  margin-top: 1.6rem;
+  padding: .65rem;
+  border: 1px solid rgba(174, 237, 194, .2);
+  border-radius: 1.15rem;
   background: rgba(4, 34, 25, .5);
   box-shadow: inset 0 1px rgba(255, 255, 255, .08);
 }
 
 .command-map {
   position: relative;
-  min-height: 485px;
+  min-height: 350px;
   overflow: hidden;
-  border-radius: 1rem;
+  border-radius: 0.85rem;
   background: #031c15;
 }
 
@@ -3096,9 +3095,9 @@ button {
 .route-path-clear {
   fill: none;
   stroke: #10b981;
-  stroke-width: 3.5;
+  stroke-width: 3;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 8px rgba(16, 185, 129, .7));
+  filter: drop-shadow(0 0 6px rgba(16, 185, 129, .6));
   stroke-dasharray: 8 14;
   animation: dash 5s linear infinite;
 }
@@ -3106,9 +3105,9 @@ button {
 .route-path-risk {
   fill: none;
   stroke: #f59e0b;
-  stroke-width: 3;
+  stroke-width: 2.5;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 8px rgba(245, 158, 11, .7));
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, .6));
   stroke-dasharray: 8 12;
   animation: dash 6s linear infinite;
 }
@@ -3116,21 +3115,21 @@ button {
 .route-path-blocked {
   fill: none;
   stroke: #ef4444;
-  stroke-width: 3.5;
+  stroke-width: 3;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 10px rgba(239, 68, 68, .85));
+  filter: drop-shadow(0 0 8px rgba(239, 68, 68, .75));
   stroke-dasharray: 10 10;
   animation: dash 7s linear infinite;
 }
 
 .map-node {
   position: absolute;
-  width: .7rem;
-  height: .7rem;
-  border: 2px solid white;
+  width: .6rem;
+  height: .6rem;
+  border: 1.5px solid white;
   border-radius: 50%;
   z-index: 3;
-  box-shadow: 0 0 0 .3rem rgba(16, 185, 129, .2), 0 0 15px rgba(16, 185, 129, .9);
+  box-shadow: 0 0 0 .25rem rgba(16, 185, 129, .2), 0 0 10px rgba(16, 185, 129, .8);
 }
 
 .map-node.node-guwahati {
@@ -3143,7 +3142,7 @@ button {
   top: 58.8%;
   left: 37.5%;
   background: #f59e0b;
-  box-shadow: 0 0 0 .3rem rgba(245, 158, 11, .25), 0 0 15px #f59e0b;
+  box-shadow: 0 0 0 .25rem rgba(245, 158, 11, .25), 0 0 10px #f59e0b;
 }
 
 .map-node.node-nagaon {
@@ -3162,14 +3161,14 @@ button {
   top: 53.2%;
   left: 65.5%;
   background: #ef4444;
-  box-shadow: 0 0 0 .3rem rgba(239, 68, 68, .3), 0 0 16px #ef4444;
+  box-shadow: 0 0 0 .25rem rgba(239, 68, 68, .3), 0 0 12px #ef4444;
 }
 
 .map-node.node-imphal {
   top: 79.5%;
   left: 68.5%;
   background: #ef4444;
-  box-shadow: 0 0 0 .3rem rgba(239, 68, 68, .3), 0 0 16px #ef4444;
+  box-shadow: 0 0 0 .25rem rgba(239, 68, 68, .3), 0 0 12px #ef4444;
 }
 
 .map-vehicle {
@@ -3181,56 +3180,53 @@ button {
 .map-vehicle.v1 {
   top: 45%;
   left: 44%;
-  width: .75rem;
-  height: .75rem;
+  width: .65rem;
+  height: .65rem;
   background: #10b981;
-  box-shadow: 0 0 0 .35rem rgba(16, 185, 129, .2), 0 0 15px #10b981;
+  box-shadow: 0 0 0 .3rem rgba(16, 185, 129, .2), 0 0 10px #10b981;
   animation: vehiclePulse 2s infinite;
 }
 
 .map-vehicle.v2 {
   top: 52%;
   left: 38%;
-  width: .75rem;
-  height: .75rem;
+  width: .65rem;
+  height: .65rem;
   background: #f59e0b;
-  box-shadow: 0 0 0 .35rem rgba(245, 158, 11, .2), 0 0 15px #f59e0b;
+  box-shadow: 0 0 0 .3rem rgba(245, 158, 11, .2), 0 0 10px #f59e0b;
   animation: vehiclePulse 2.4s infinite;
 }
 
 .map-vehicle.v3 {
   top: 66%;
   left: 70%;
-  width: .75rem;
-  height: .75rem;
+  width: .65rem;
+  height: .65rem;
   background: #ef4444;
-  box-shadow: 0 0 0 .35rem rgba(239, 68, 68, .25), 0 0 18px #ef4444;
+  box-shadow: 0 0 0 .3rem rgba(239, 68, 68, .25), 0 0 12px #ef4444;
   animation: vehiclePulse 1.8s infinite;
 }
 
 @keyframes vehiclePulse {
-
-  0%,
-  100% {
+  0%, 100% {
     transform: scale(1);
   }
-
   50% {
-    transform: scale(1.3);
+    transform: scale(1.25);
   }
 }
 
 .map-label {
   position: absolute;
   z-index: 5;
-  padding: .25rem .45rem;
-  border-radius: .35rem;
+  padding: .2rem .38rem;
+  border-radius: .3rem;
   background: rgba(3, 25, 19, .9);
   border: 1px solid rgba(255, 255, 255, .2);
   color: rgba(255, 255, 255, .9);
-  font: 700 .48rem "DM Mono", monospace;
+  font: 700 .45rem "DM Mono", monospace;
   letter-spacing: .08em;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .6);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .5);
   pointer-events: none;
 }
 
@@ -3259,27 +3255,27 @@ button {
 .command-panel {
   display: flex;
   flex-direction: column;
-  gap: .75rem;
-  padding: .4rem;
+  gap: .55rem;
+  padding: .2rem;
 }
 
 .panel-card {
-  padding: 1.15rem;
+  padding: .75rem .85rem;
   border: 1px solid rgba(174, 237, 194, .16);
-  border-radius: .9rem;
+  border-radius: .75rem;
   background: rgba(255, 255, 255, .055);
 }
 
 .panel-label {
   color: rgba(255, 255, 255, .5);
-  font: .57rem "DM Mono", monospace;
+  font: .54rem "DM Mono", monospace;
   letter-spacing: .12em;
   text-transform: uppercase;
 }
 
 .panel-big {
-  margin-top: .35rem;
-  font-size: 1.85rem;
+  margin-top: .25rem;
+  font-size: 1.45rem;
   font-weight: 800;
   letter-spacing: -.05em;
 }
@@ -3287,11 +3283,11 @@ button {
 .status-row {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  padding: .6rem 0;
+  gap: 0.75rem;
+  padding: .4rem 0;
   color: rgba(255, 255, 255, .7);
-  font: .69rem "DM Mono", monospace;
-  border-bottom: 1px solid rgba(255, 255, 255, .1);
+  font: .64rem "DM Mono", monospace;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
 }
 
 .status-row:last-child {
@@ -3322,35 +3318,36 @@ button {
 
 .alert-card strong {
   display: block;
-  margin-top: .7rem;
+  margin-top: .45rem;
   max-width: 240px;
-  font-size: .95rem;
-  line-height: 1.4;
+  font-size: .82rem;
+  line-height: 1.35;
 }
 
 .alert-card small {
   display: block;
-  margin-top: .7rem;
+  margin-top: .45rem;
   color: #f2c366;
-  font: .59rem "DM Mono", monospace;
+  font: .54rem "DM Mono", monospace;
 }
 
 .impact {
   background: var(--mineral);
+  padding: clamp(2.4rem, 4vw, 3.6rem) 0;
 }
 
 .impact-head {
   display: flex;
   align-items: end;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .impact-heading {
-  margin: 1.2rem 0 0;
+  margin: 0.75rem 0 0;
   max-width: 600px;
-  font-size: clamp(1.85rem, 3.2vw, 2.85rem);
-  line-height: 1.12;
+  font-size: clamp(1.4rem, 2.1vw, 1.95rem);
+  line-height: 1.18;
   letter-spacing: -.035em;
   font-weight: 800;
 }
@@ -3359,26 +3356,26 @@ button {
   max-width: 250px;
   margin-bottom: .2rem;
   color: #557069;
-  font-size: .86rem;
-  line-height: 1.6;
+  font-size: .82rem;
+  line-height: 1.55;
 }
 
 .impact-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 0;
-  margin-top: 3.5rem;
-  border-top: 1px solid rgba(8, 127, 77, .22);
-  border-bottom: 1px solid rgba(8, 127, 77, .22);
+  margin-top: 1.85rem;
+  border-top: 1px solid rgba(8, 127, 77, .18);
+  border-bottom: 1px solid rgba(8, 127, 77, .18);
 }
 
 .impact-stat {
-  padding: 1.2rem 1rem 1.3rem 0;
-  border-right: 1px solid rgba(8, 127, 77, .22);
+  padding: 0.85rem 0.65rem 0.95rem 0;
+  border-right: 1px solid rgba(8, 127, 77, .18);
 }
 
 .impact-stat:not(:first-child) {
-  padding-left: 1rem;
+  padding-left: 0.85rem;
 }
 
 .impact-stat:last-child {
@@ -3388,7 +3385,7 @@ button {
 .impact-stat strong {
   display: block;
   color: var(--forest);
-  font-size: clamp(1.75rem, 2.8vw, 2.65rem);
+  font-size: clamp(1.25rem, 1.7vw, 1.65rem);
   line-height: 1.05;
   letter-spacing: -.04em;
 }
@@ -3396,11 +3393,11 @@ button {
 .impact-stat span {
   display: block;
   max-width: 120px;
-  margin-top: .55rem;
+  margin-top: .35rem;
   color: #557069;
-  font: .58rem "DM Mono", monospace;
-  line-height: 1.45;
-  letter-spacing: .1em;
+  font: .52rem "DM Mono", monospace;
+  line-height: 1.35;
+  letter-spacing: .08em;
   text-transform: uppercase;
 }
 
@@ -3408,23 +3405,23 @@ button {
   background: var(--mineral);
   position: relative;
   overflow: hidden;
-  padding: clamp(3.8rem, 6vw, 5.8rem) 0;
+  padding: clamp(2.4rem, 4vw, 3.6rem) 0;
 }
 
 .solutions-top {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1.5rem;
   position: relative;
   z-index: 2;
 }
 
 .solutions-heading {
-  margin: 1.2rem 0 0;
+  margin: 0.75rem 0 0;
   max-width: 680px;
-  font-size: clamp(1.85rem, 3.2vw, 2.85rem);
-  line-height: 1.12;
+  font-size: clamp(1.4rem, 2.1vw, 1.95rem);
+  line-height: 1.18;
   letter-spacing: -0.035em;
   font-weight: 800;
   color: #0d2820;
@@ -3433,38 +3430,38 @@ button {
 .solutions-top p {
   max-width: 280px;
   color: #557069;
-  font-size: 0.88rem;
-  line-height: 1.6;
+  font-size: 0.82rem;
+  line-height: 1.55;
 }
 
 .solution-track {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 1.15rem;
-  margin-top: 4.8rem;
+  gap: 0.75rem;
+  margin-top: 1.6rem;
   position: relative;
   z-index: 2;
 }
 
 .solution-card {
   position: relative;
-  min-height: 390px;
-  padding: 1.45rem 1.4rem 1.3rem;
+  min-height: 260px;
+  padding: 1.1rem 1rem 0.95rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   border: 1px solid rgba(8, 127, 77, 0.14);
-  border-radius: 1.25rem;
+  border-radius: 0.95rem;
   background: #ffffff;
-  box-shadow: 0 10px 28px rgba(4, 30, 22, 0.05);
+  box-shadow: 0 6px 20px rgba(4, 30, 22, 0.04);
   overflow: hidden;
   transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .solution-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 24px 50px rgba(4, 30, 22, 0.12);
-  border-color: rgba(8, 127, 77, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(4, 30, 22, 0.1);
+  border-color: rgba(8, 127, 77, 0.28);
 }
 
 /* Solution Backdrop with Seamless Multi-Stop Mist Blend */
@@ -3482,7 +3479,7 @@ button {
   right: 0;
   bottom: 0;
   width: 100%;
-  height: 65%;
+  height: 60%;
   object-fit: cover;
   object-position: center bottom;
   filter: contrast(1.06) saturate(1.1);
@@ -3492,7 +3489,7 @@ button {
 }
 
 .solution-card:hover .solution-backdrop-photo {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 .solution-backdrop-mist {
@@ -3512,7 +3509,7 @@ button {
   background-image: url("/topography.jpg");
   background-position: center top;
   background-size: 135%;
-  opacity: 0.32;
+  opacity: 0.28;
   mix-blend-mode: multiply;
   -webkit-mask-image: linear-gradient(to bottom, black 0%, black 46%, rgba(0, 0, 0, 0.35) 62%, transparent 82%);
   mask-image: linear-gradient(to bottom, black 0%, black 46%, rgba(0, 0, 0, 0.35) 62%, transparent 82%);
@@ -3520,13 +3517,13 @@ button {
 
 .solution-partition-orb {
   position: absolute;
-  right: -2.8rem;
-  top: 1.8rem;
-  width: 9.8rem;
-  height: 9.8rem;
-  border: 1.2px solid rgba(8, 127, 77, 0.28);
+  right: -2rem;
+  top: 1.2rem;
+  width: 7.5rem;
+  height: 7.5rem;
+  border: 1px solid rgba(8, 127, 77, 0.24);
   border-radius: 50%;
-  opacity: 0.85;
+  opacity: 0.8;
   pointer-events: none;
   transition: transform 0.4s ease;
 }
@@ -3534,21 +3531,21 @@ button {
 .solution-partition-orb::before {
   content: "";
   position: absolute;
-  inset: 1.6rem;
-  border: 1px solid rgba(8, 127, 77, 0.22);
+  inset: 1.2rem;
+  border: 1px solid rgba(8, 127, 77, 0.18);
   border-radius: 50%;
 }
 
 .solution-partition-orb::after {
   content: "";
   position: absolute;
-  inset: 3.2rem;
-  border: 1px dashed rgba(8, 127, 77, 0.2);
+  inset: 2.4rem;
+  border: 1px dashed rgba(8, 127, 77, 0.16);
   border-radius: 50%;
 }
 
 .solution-card:hover .solution-partition-orb {
-  transform: scale(1.12) rotate(15deg);
+  transform: scale(1.08) rotate(12deg);
 }
 
 /* Solution Foreground Content */
@@ -3557,7 +3554,7 @@ button {
   z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.45rem;
 }
 
 .solution-signal {
@@ -3565,8 +3562,8 @@ button {
   align-items: center;
   gap: 0.45rem;
   color: #087f4d;
-  font: 700 0.54rem "DM Mono", monospace;
-  letter-spacing: 0.12em;
+  font: 700 0.52rem "DM Mono", monospace;
+  letter-spacing: 0.1em;
 }
 
 .solution-signal i {
@@ -3576,32 +3573,32 @@ button {
 }
 
 .solution-icon-wrap {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   display: grid;
   place-items: center;
-  border-radius: 0.65rem;
+  border-radius: 0.55rem;
   color: #087f4d;
   background: #edf7f0;
-  border: 1px solid rgba(8, 127, 77, 0.15);
-  margin-top: 0.15rem;
+  border: 1px solid rgba(8, 127, 77, 0.14);
+  margin-top: 0.1rem;
 }
 
 .solution-text {
-  margin-top: 0.15rem;
+  margin-top: 0.1rem;
 }
 
 .solution-no {
   color: #087f4d;
-  font: 700 0.58rem "DM Mono", monospace;
+  font: 700 0.54rem "DM Mono", monospace;
   letter-spacing: 0.1em;
   display: block;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.15rem;
 }
 
 .solution-card h3 {
-  margin: 0 0 0.4rem;
-  font-size: 1.05rem;
+  margin: 0 0 0.25rem;
+  font-size: 0.92rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   color: #09281f;
@@ -3611,22 +3608,22 @@ button {
 .solution-card p {
   margin: 0;
   color: #557069;
-  font-size: 0.78rem;
-  line-height: 1.5;
-  min-height: 2.35rem;
+  font-size: 0.74rem;
+  line-height: 1.42;
+  min-height: auto;
 }
 
 .solution-card-bottom {
   position: relative;
   z-index: 2;
-  margin-top: 1.8rem;
+  margin-top: 1rem;
   display: flex;
   align-items: center;
 }
 
 .solution-action-btn {
-  width: 2.15rem;
-  height: 2.15rem;
+  width: 1.85rem;
+  height: 1.85rem;
   border-radius: 50%;
   background: #083424;
   border: 1px solid rgba(255, 255, 255, 0.35);
@@ -3634,7 +3631,7 @@ button {
   display: grid;
   place-items: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -3642,8 +3639,8 @@ button {
 .solution-card:hover .solution-action-btn {
   background: #10b981;
   color: #031c15;
-  transform: scale(1.08);
-  box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+  transform: scale(1.06);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
 }
 
 @media (max-width: 1200px) {
@@ -3659,13 +3656,13 @@ button {
 }
 
 .northeast {
-  min-height: 600px;
+  min-height: 400px;
   display: flex;
   align-items: center;
   color: white;
   background: #173e30;
   overflow: hidden;
-  padding: clamp(3.8rem, 6vw, 5.8rem) 0;
+  padding: clamp(2.4rem, 4vw, 3.6rem) 0;
 }
 
 .northeast-media {
@@ -3697,10 +3694,10 @@ button {
 }
 
 .northeast-heading {
-  margin: 1.2rem 0 1.1rem;
+  margin: 0.75rem 0 0.75rem;
   max-width: 720px;
-  font-size: clamp(1.95rem, 3.4vw, 3.1rem);
-  line-height: 1.12;
+  font-size: clamp(1.4rem, 2.1vw, 1.95rem);
+  line-height: 1.18;
   letter-spacing: -.035em;
   font-weight: 800;
 }
@@ -3713,8 +3710,8 @@ button {
 .northeast-copy {
   max-width: 420px;
   color: rgba(255, 255, 255, .75);
-  font-size: .88rem;
-  line-height: 1.65;
+  font-size: .82rem;
+  line-height: 1.55;
 }
 
 .northeast-route {
@@ -3722,7 +3719,7 @@ button {
   z-index: 1;
   right: 8%;
   bottom: 12%;
-  width: min(36vw, 510px);
+  width: min(36vw, 420px);
   opacity: .75;
 }
 
@@ -3743,7 +3740,7 @@ button {
   color: white;
   background: var(--forest);
   overflow: hidden;
-  padding: clamp(3.8rem, 6vw, 5.8rem) 0;
+  padding: clamp(2.4rem, 4vw, 3.6rem) 0;
 }
 
 .cta::before {
@@ -3757,14 +3754,11 @@ button {
   mix-blend-mode: screen;
 }
 
-
-
-
 .cta-heading {
-  margin: 1.2rem 0 1rem;
+  margin: 0.75rem 0 0.75rem;
   max-width: 680px;
-  font-size: clamp(1.95rem, 3.4vw, 3.1rem);
-  line-height: 1.12;
+  font-size: clamp(1.4rem, 2.1vw, 1.95rem);
+  line-height: 1.18;
   letter-spacing: -.035em;
   font-weight: 800;
 }
@@ -3772,15 +3766,15 @@ button {
 .cta-copy {
   max-width: 400px;
   color: rgba(255, 255, 255, .78);
-  font-size: .88rem;
-  line-height: 1.65;
+  font-size: .82rem;
+  line-height: 1.55;
 }
 
 .cta-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: .7rem;
-  margin-top: 1.8rem;
+  gap: .65rem;
+  margin-top: 1.25rem;
 }
 
 .truck-line {
@@ -4748,143 +4742,489 @@ button {
   color: #f1f5f9 !important;
 }
 
-.route-section {
-  padding-top: 5rem;
-  padding-bottom: 5rem;
-  background: radial-gradient(circle at 50% 0%, #083325 0%, #031c15 65%, #02120e 100%) !important;
-}
-
-.route-heading {
-  color: #ffffff !important;
-  font-size: clamp(2rem, 5vw, 3.2rem) !important;
-}
-
-.route-heading em {
-  color: #34d399 !important;
-  font-style: normal;
-}
-
-.route-copy {
-  color: #94a3b8 !important;
-  font-size: 1.05rem !important;
-  max-width: 580px;
-  line-height: 1.6;
-}
-
 /* ==========================================================================
-   NER Problem Statement Banner
+   NER Problem Statement Banner (Topographic Corridor Intelligence Initiative)
    ========================================================================== */
 
 .ner-problem-banner {
   position: relative;
-  background: linear-gradient(135deg, #02180f 0%, #041e14 60%, #051a0e 100%);
-  border-top: 1px solid rgba(16, 185, 129, 0.12);
-  border-bottom: 1px solid rgba(16, 185, 129, 0.12);
-  padding: 2.5rem 0;
+  padding: clamp(1.25rem, 2.5vw, 2.25rem) 0;
   overflow: hidden;
+  z-index: 10;
 }
 
-.ner-problem-banner::before {
+.ner-banner-card {
+  position: relative;
+  background: linear-gradient(135deg, #f7faf8 0%, #edf6f1 48%, #f2f8f4 100%);
+  border: 1px solid rgba(8, 127, 77, 0.16);
+  border-radius: clamp(1rem, 2vw, 1.35rem);
+  box-shadow: 0 12px 30px -10px rgba(8, 127, 77, 0.07), 0 2px 10px rgba(0, 0, 0, 0.02);
+  display: grid;
+  grid-template-columns: 1.28fr 0.92fr;
+  gap: clamp(1.2rem, 2.2vw, 2rem);
+  align-items: center;
+  padding: clamp(1.2rem, 2.2vw, 1.75rem);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Subtle background topo glow */
+.ner-banner-card::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 80% 50%, rgba(16, 185, 129, 0.06) 0%, transparent 60%);
+  background: radial-gradient(circle at 82% 40%, rgba(16, 185, 129, 0.07) 0%, transparent 65%);
   pointer-events: none;
 }
 
-.ner-banner-inner {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+/* Dark mode compatibility */
+.dark .ner-banner-card {
+  background: linear-gradient(135deg, #021a12 0%, #04261b 50%, #031e14 100%);
+  border-color: rgba(16, 185, 129, 0.24);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5), 0 0 25px rgba(16, 185, 129, 0.08);
 }
 
+.dark .ner-banner-card::before {
+  background: radial-gradient(circle at 82% 40%, rgba(16, 185, 129, 0.12) 0%, transparent 65%);
+}
+
+/* Left Column Content */
+.ner-banner-left {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* Eyebrow badge and tracking initiative */
 .ner-banner-eyebrow {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.65rem;
+  flex-wrap: wrap;
 }
 
 .ner-badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.3rem 0.75rem;
+  gap: 0.4rem;
+  padding: 0.26rem 0.68rem;
   border-radius: 999px;
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  color: #34d399;
+  background: rgba(8, 127, 77, 0.08);
+  border: 1px solid rgba(8, 127, 77, 0.28);
+  color: #087f4d;
   font-family: "DM Mono", monospace;
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(8, 127, 77, 0.06);
+}
+
+.ner-badge-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dark .ner-badge {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+.ner-eyebrow-divider {
+  color: #94a3b8;
+  font-weight: 300;
+  font-size: 0.75rem;
+}
+
+.dark .ner-eyebrow-divider {
+  color: rgba(255, 255, 255, 0.25);
 }
 
 .ner-eyebrow-text {
   font-family: "DM Mono", monospace;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.42);
+  color: #475569;
 }
 
-.ner-banner-text {
-  max-width: 820px;
+.dark .ner-eyebrow-text {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Main dual-toned heading */
+.ner-banner-heading {
   margin: 0;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 0.9rem;
-  line-height: 1.7;
+  font-size: clamp(1.35rem, 1.9vw, 1.75rem);
+  font-weight: 800;
+  line-height: 1.16;
+  letter-spacing: -0.035em;
 }
 
+.ner-heading-main {
+  color: #0f172a;
+  display: block;
+}
+
+.dark .ner-heading-main {
+  color: #f8fafc;
+}
+
+.ner-heading-accent {
+  color: #087f4d;
+  display: block;
+}
+
+.dark .ner-heading-accent {
+  color: #10b981;
+}
+
+/* Body description */
+.ner-banner-text {
+  margin: 0;
+  color: #475569;
+  font-size: clamp(0.82rem, 0.95vw, 0.88rem);
+  line-height: 1.55;
+  font-weight: 450;
+  max-width: 560px;
+}
+
+.dark .ner-banner-text {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+/* Challenge badges / chips */
 .ner-challenge-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  gap: 0.45rem;
+  margin-top: 0.2rem;
 }
 
 .ner-chip {
   display: inline-flex;
   align-items: center;
-  padding: 0.3rem 0.8rem;
+  gap: 0.38rem;
+  padding: 0.28rem 0.68rem;
   border-radius: 999px;
   font-family: "DM Mono", monospace;
-  font-size: 0.58rem;
+  font-size: 0.56rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.23, 1, 0.32, 1);
+  border: 1px solid transparent;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  white-space: nowrap;
 }
 
+.ner-chip-icon {
+  flex-shrink: 0;
+}
+
+.ner-chip:hover,
+.ner-chip--active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Chip Color Variants */
 .ner-chip--warn {
-  background: rgba(239, 68, 68, 0.12);
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: #fff5f5;
+  border-color: rgba(239, 68, 68, 0.28);
+  color: #dc2626;
+}
+
+.dark .ner-chip--warn {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.38);
   color: #fca5a5;
 }
 
 .ner-chip--geo {
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.28);
+  background: #f0fdf4;
+  border-color: rgba(16, 185, 129, 0.28);
+  color: #059669;
+}
+
+.dark .ner-chip--geo {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(16, 185, 129, 0.38);
   color: #6ee7b7;
 }
 
 .ner-chip--info {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.28);
+  background: #f0f9ff;
+  border-color: rgba(14, 165, 233, 0.28);
+  color: #0284c7;
+}
+
+.dark .ner-chip--info {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: rgba(59, 130, 246, 0.38);
   color: #93c5fd;
 }
 
 .ner-chip--supply {
-  background: rgba(245, 158, 11, 0.1);
-  border: 1px solid rgba(245, 158, 11, 0.28);
+  background: #fffbeb;
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #d97706;
+}
+
+.dark .ner-chip--supply {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.38);
   color: #fcd34d;
 }
 
 .ner-chip--infra {
-  background: rgba(168, 85, 247, 0.1);
-  border: 1px solid rgba(168, 85, 247, 0.28);
+  background: #faf5ff;
+  border-color: rgba(168, 85, 247, 0.28);
+  color: #7c3aed;
+}
+
+.dark .ner-chip--infra {
+  background: rgba(168, 85, 247, 0.14);
+  border-color: rgba(168, 85, 247, 0.38);
   color: #c4b5fd;
+}
+
+/* Right Column Visual / Interactive Topo Map */
+.ner-banner-visual {
+  position: relative;
+  width: 100%;
+  min-height: 220px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ner-topo-canvas {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  max-height: 250px;
+  object-fit: contain;
+  overflow: visible;
+  filter: drop-shadow(0 4px 16px rgba(8, 127, 77, 0.05));
+}
+
+/* Telemetry Flow Animation */
+.ner-highway-dash {
+  animation: nerDashFlow 24s linear infinite;
+}
+
+@keyframes nerDashFlow {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+/* Layered Markers Overlay */
+.ner-markers-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ner-map-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ner-map-pin:hover,
+.ner-map-pin--active {
+  transform: translate(-50%, -50%) scale(1.18);
+  z-index: 25;
+}
+
+.ner-pin-disc {
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1), 0 1px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+}
+
+/* Pin Color Schemes */
+.ner-map-pin--red .ner-pin-disc {
+  background: rgba(254, 242, 242, 0.94);
+  border-color: #ef4444;
+  color: #dc2626;
+}
+
+.ner-map-pin--amber .ner-pin-disc {
+  background: rgba(254, 243, 199, 0.94);
+  border-color: #f59e0b;
+  color: #d97706;
+}
+
+.ner-map-pin--green .ner-pin-disc {
+  background: rgba(236, 253, 245, 0.94);
+  border-color: #10b981;
+  color: #059669;
+}
+
+.ner-map-pin--purple .ner-pin-disc {
+  background: rgba(243, 232, 255, 0.94);
+  border-color: #a855f7;
+  color: #7c3aed;
+}
+
+/* Dark mode for pin discs */
+.dark .ner-map-pin--red .ner-pin-disc {
+  background: rgba(45, 10, 10, 0.94);
+  border-color: #ef4444;
+  color: #fca5a5;
+}
+
+.dark .ner-map-pin--amber .ner-pin-disc {
+  background: rgba(45, 30, 10, 0.94);
+  border-color: #f59e0b;
+  color: #fcd34d;
+}
+
+.dark .ner-map-pin--green .ner-pin-disc {
+  background: rgba(6, 40, 25, 0.94);
+  border-color: #10b981;
+  color: #6ee7b7;
+}
+
+.dark .ner-map-pin--purple .ner-pin-disc {
+  background: rgba(35, 12, 50, 0.94);
+  border-color: #a855f7;
+  color: #c4b5fd;
+}
+
+/* Radar Ping Animation */
+.ner-pin-pulse {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1.2px solid currentColor;
+  animation: nerRadarPing 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+.ner-map-pin--red .ner-pin-pulse { color: #ef4444; }
+.ner-map-pin--amber .ner-pin-pulse { color: #f59e0b; }
+.ner-map-pin--green .ner-pin-pulse { color: #10b981; }
+.ner-map-pin--purple .ner-pin-pulse { color: #a855f7; }
+
+@keyframes nerRadarPing {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.9;
+  }
+  80%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Interactive Popover Tooltip */
+.ner-pin-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  padding: 0.45rem 0.68rem;
+  border-radius: 0.65rem;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28), 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: max-content;
+  max-width: 195px;
+  z-index: 30;
+  pointer-events: none;
+  animation: nerTooltipIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(12px);
+}
+
+@keyframes nerTooltipIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 4px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+.ner-tooltip-tag {
+  font-family: "DM Mono", monospace;
+  font-size: 0.52rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #34d399;
+  margin-bottom: 0.15rem;
+}
+
+.ner-tooltip-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.ner-tooltip-detail {
+  font-size: 0.64rem;
+  color: #cbd5e1;
+  line-height: 1.3;
+  margin-top: 0.2rem;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .ner-banner-card {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .ner-banner-visual {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ner-banner-eyebrow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .ner-eyebrow-divider {
+    display: none;
+  }
+
+  .ner-challenge-chips {
+    gap: 0.4rem;
+  }
+
+  .ner-chip {
+    padding: 0.3rem 0.65rem;
+    font-size: 0.56rem;
+  }
 }
 
 /* ==========================================================================

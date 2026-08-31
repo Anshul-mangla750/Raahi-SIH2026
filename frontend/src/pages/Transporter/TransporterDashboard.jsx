@@ -9,9 +9,11 @@ import OnTimeDeliveryChart from '../../components/transporter/OnTimeDeliveryChar
 import TopRoutesList from '../../components/transporter/TopRoutesList';
 import RecentConsignmentsTable from '../../components/transporter/RecentConsignmentsTable';
 import TransporterFooter from '../../components/transporter/TransporterFooter';
+import NewConsignmentModal from '../../components/consignments/NewConsignmentModal';
 
 export default function TransporterDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showNewModal, setShowNewModal] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex selection:bg-emerald-500 selection:text-white font-sans antialiased text-slate-900">
@@ -26,6 +28,8 @@ export default function TransporterDashboard() {
         {/* Transporter Top Header */}
         <TransporterHeader
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+          isDashboard={true}
+          onAddConsignment={() => setShowNewModal(true)}
         />
 
         {/* Transporter Dashboard Content */}
@@ -70,6 +74,13 @@ export default function TransporterDashboard() {
           <TransporterFooter />
         </main>
       </div>
+
+      {/* New Consignment Modal */}
+      <NewConsignmentModal
+        isOpen={showNewModal}
+        onClose={() => setShowNewModal(false)}
+        onConsignmentAdded={() => {}}
+      />
     </div>
   );
 }

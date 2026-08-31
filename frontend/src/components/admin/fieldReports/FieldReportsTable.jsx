@@ -52,6 +52,31 @@ export const FieldReportsTable = () => {
     }
   };
 
+  const handleExportCSV = () => {
+    try {
+      const headers = ['Report ID', 'Type', 'Location', 'Reported By', 'Priority', 'Status', 'Reported On'];
+      const rows = filteredReports.map(r => [
+        `"${r.id || ''}"`,
+        `"${r.type || ''}"`,
+        `"${r.location || ''}"`,
+        `"${r.reportedBy || ''}"`,
+        `"${r.priority || ''}"`,
+        `"${r.status || ''}"`,
+        `"${r.reportedOn || ''}"`,
+      ]);
+      const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `raahi_field_reports_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <div className="card" style={{ marginBottom: '24px' }}>
       {/* Filter Toolbar matching Image 5 */}
@@ -133,10 +158,10 @@ export const FieldReportsTable = () => {
           <button
             className="btn btn-outline"
             style={{ padding: '8px 14px' }}
-            onClick={() => openModal('exportPlan')}
+            onClick={handleExportCSV}
           >
             <Download size={14} />
-            <span>Export Report</span>
+            <span>Export CSV</span>
           </button>
 
           <button
