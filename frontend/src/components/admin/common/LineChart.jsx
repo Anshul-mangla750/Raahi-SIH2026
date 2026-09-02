@@ -6,13 +6,14 @@ export const LineChart = ({
   height = 200,
   yMax = null,
   showLegend = true,
+  yAxisLabel = null,
   className = '',
 }) => {
   const [hoverIndex, setHoverIndex] = useState(null);
 
   if (!data.length || !series.length) return null;
 
-  const padding = { top: 20, right: 20, bottom: 30, left: 40 };
+  const padding = { top: 16, right: 24, bottom: 26, left: 66 };
   const width = 600; // viewBox internal units
 
   // Calculate max value across series
@@ -26,6 +27,7 @@ export const LineChart = ({
 
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
+  const centerY = padding.top + chartHeight / 2;
 
   // Coordinate helper
   const getX = (index) => padding.left + (index / (data.length - 1)) * chartWidth;
@@ -37,6 +39,21 @@ export const LineChart = ({
         viewBox={`0 0 ${width} ${height}`}
         style={{ width: '100%', height: 'auto', overflow: 'visible' }}
       >
+        {/* Y Axis Label Title */}
+        {yAxisLabel && (
+          <text
+            x={14}
+            y={centerY}
+            transform={`rotate(-90 14 ${centerY})`}
+            fill="var(--text-muted)"
+            fontSize="10"
+            fontWeight="600"
+            textAnchor="middle"
+          >
+            {yAxisLabel}
+          </text>
+        )}
+
         {/* Horizontal Grid lines */}
         {[0, 0.25, 0.5, 0.75, 1].map((ratio, i) => {
           const y = height - padding.bottom - ratio * chartHeight;
@@ -53,8 +70,8 @@ export const LineChart = ({
                 strokeWidth="1"
               />
               <text
-                x={padding.left - 8}
-                y={y + 4}
+                x={padding.left - 10}
+                y={y + 3.5}
                 fill="var(--text-muted)"
                 fontSize="10"
                 textAnchor="end"

@@ -143,13 +143,26 @@ export const TopHeader = () => {
         <div
           className={`header-search-container ${isSearchFocused ? 'focused' : ''}`}
           ref={searchContainerRef}
+          style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '100%' }}
         >
-          <Search size={16} className="search-icon" />
+          <Search
+            size={16}
+            className="search-icon"
+            style={{
+              position: 'absolute',
+              left: '14px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: 'var(--text-muted)',
+              pointerEvents: 'none',
+              zIndex: 2,
+            }}
+          />
           <input
             ref={searchInputRef}
             type="text"
             className="header-search-input"
-            placeholder="ridors, fleet vehicles, alerts (Ctrl + K)..."
+            placeholder="Search corridors, fleet vehicles, alerts (Ctrl + K)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
