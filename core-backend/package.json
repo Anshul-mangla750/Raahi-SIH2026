@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "seed": "ts-node-dev src/seed/index.ts",
+    "clean-db": "ts-node src/seed/clean-db.ts",
     "migrate": "ts-node-dev src/seed/migrate.ts"
   },
   "dependencies": {
