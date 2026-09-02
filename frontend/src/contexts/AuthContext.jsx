@@ -36,8 +36,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (role, identifier, password, rememberMe = true) => {
+  const login = async (...args) => {
     setIsLoading(true);
+    let identifier, password, rememberMe = true;
+
+    // Handle both login(identifier, password, rememberMe) and legacy login(role, identifier, password, rememberMe)
+    if (args.length >= 3 && typeof args[2] === 'string') {
+      identifier = args[1];
+      password = args[2];
+      rememberMe = args[3] !== undefined ? args[3] : true;
+    } else {
+      identifier = args[0];
+      password = args[1];
+      rememberMe = args[2] !== undefined ? args[2] : true;
+    }
 
     try {
       // Real JWT Authentication with PostgreSQL / Backend
@@ -61,17 +73,22 @@ export const AuthProvider = ({ children }) => {
           role: mappedRole,
           backendRole: apiUser.role,
           roleTitle:
-            mappedRole === "official"
+            apiUser.role === "admin"
+              ? "National Logistics Administrator"
+              : apiUser.role === "district_officer"
               ? "Regional Command Officer"
-              : mappedRole === "operator"
+              : apiUser.role === "transporter"
               ? "Fleet Operations Manager"
+              : apiUser.role === "driver"
+              ? "Fleet Commercial Driver"
               : "Consignee / Citizen User",
           agency: apiUser.agency || (mappedRole === "official" ? "MDoNER Logistics Division" : "Brahmaputra Freight"),
         };
 
+        setActiveRoleTab(mappedRole);
         saveUserSession(loggedInUser, rememberMe);
         setIsLoading(false);
-        return { success: true, message: `Welcome back, ${loggedInUser.name}!` };
+        return { success: true, message: `Welcome back, ${loggedInUser.name}!`, user: loggedInUser };
       } else {
         // Explicitly reject invalid credentials
         setIsLoading(false);

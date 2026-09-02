@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
-import LoginTypeTabs from './LoginTypeTabs';
 import SocialLoginButtons from './SocialLoginButtons';
 import SecurityNotice from './SecurityNotice';
 
@@ -13,7 +12,6 @@ export default function LoginForm() {
   const location = useLocation();
   const { login, isLoading } = useAuth();
   
-  const [activeTab, setActiveTab] = useState('official');
   const [showPassword, setShowPassword] = useState(false);
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +24,7 @@ export default function LoginForm() {
       return;
     }
 
-    const result = await login(activeTab, emailOrPhone, password, rememberMe);
+    const result = await login(emailOrPhone, password, rememberMe);
     if (result.success) {
       toast.success(result.message);
       
@@ -36,10 +34,13 @@ export default function LoginForm() {
         return;
       }
 
-      // Default role routing
-      if (activeTab === 'official') {
+      // Automatic role-based routing from backend user role
+      const backendRole = result.user?.backendRole;
+      const role = result.user?.role;
+      
+      if (backendRole === 'admin' || backendRole === 'district_officer' || role === 'official') {
         navigate('/admin', { replace: true });
-      } else if (activeTab === 'operator') {
+      } else if (backendRole === 'transporter' || backendRole === 'driver' || role === 'operator') {
         navigate('/transporter/dashboard', { replace: true });
       } else {
         navigate('/home', { replace: true });
@@ -92,9 +93,6 @@ export default function LoginForm() {
           <span className="font-extrabold text-emerald-600">NER LogiSmart</span>
         </p>
       </div>
-
-      {/* Login Role Tabs (User, Official, Operator) */}
-      <LoginTypeTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Form Elements */}
       <form onSubmit={handleSubmit} className="space-y-4">
