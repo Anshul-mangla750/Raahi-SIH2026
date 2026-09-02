@@ -11,6 +11,17 @@ import AdminDashboardApp from './pages/admin/AdminDashboardApp';
 import TransporterApp from './pages/Transporter/TransporterApp';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
+import { DashboardPage } from './pages/admin/DashboardPage';
+import { LiveMapPage } from './pages/admin/LiveMapPage';
+import { AIPredictionsPage } from './pages/admin/AIPredictionsPage';
+import { RouteOptimizationPage } from './pages/admin/RouteOptimizationPage';
+import { VehicleTrackingPage } from './pages/admin/VehicleTrackingPage';
+import { AlertsPage } from './pages/admin/AlertsPage';
+import { FieldReportsPage } from './pages/admin/FieldReportsPage';
+import { AnalyticsPage } from './pages/admin/AnalyticsPage';
+import { EmergencyModePage } from './pages/admin/EmergencyModePage';
+import { SettingsPage } from './pages/admin/SettingsPage';
+
 export default function App() {
   return (
     <ErrorBoundary>
@@ -27,13 +38,26 @@ export default function App() {
 
               {/* JWT Protected Admin Dashboard Routes */}
               <Route
-                path="/admin/*"
+                path="/admin"
                 element={
                   <ProtectedRoute allowedRoles={['official', 'admin', 'district_officer']}>
                     <AdminDashboardApp />
                   </ProtectedRoute>
                 }
-              />
+              >
+                <Route index element={<DashboardPage />} />
+                <Route path="dashboard" element={<Navigate to="/admin" replace />} />
+                <Route path="live-map" element={<LiveMapPage />} />
+                <Route path="ai-predictions" element={<AIPredictionsPage />} />
+                <Route path="route-optimization" element={<RouteOptimizationPage />} />
+                <Route path="vehicle-tracking" element={<VehicleTrackingPage />} />
+                <Route path="alerts" element={<AlertsPage />} />
+                <Route path="field-reports" element={<FieldReportsPage />} />
+                <Route path="analytics" element={<AnalyticsPage />} />
+                <Route path="emergency" element={<EmergencyModePage />} />
+                <Route path="users" element={<SettingsPage initialTab="user-management" />} />
+                <Route path="settings" element={<SettingsPage />} />
+              </Route>
 
               {/* JWT Protected Transporter Dashboard Hub Routes */}
               <Route

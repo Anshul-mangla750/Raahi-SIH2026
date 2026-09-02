@@ -477,3 +477,394 @@
   color: #ffffff;
   border-color: var(--primary-600);
 }
+
+/* ==========================================================================
+   Live Map GIS Cockpit Styles (Reference Design Matching)
+   ========================================================================== */
+
+.live-map-cockpit {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* 6-Column Top KPI Grid */
+.live-map-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 1440px) {
+  .live-map-kpi-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .live-map-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.live-map-kpi-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-xs);
+  min-height: 74px;
+}
+
+.live-map-kpi-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.live-map-kpi-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.live-map-kpi-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.live-map-kpi-val-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.live-map-kpi-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.live-map-kpi-trend {
+  font-size: 11px;
+  font-weight: 600;
+  color: #10B981;
+}
+
+.live-map-kpi-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Weather & Date Card */
+.live-map-weather-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: var(--shadow-xs);
+}
+
+.weather-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.weather-temp {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.weather-location {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.date-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Main Map Frame */
+.gis-map-viewport {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  background-color: #0f172a;
+}
+
+.gis-map-viewport.fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  height: 100vh;
+  border-radius: 0;
+}
+
+/* Floating Panels on Map */
+.map-floating-overlay {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 10;
+  max-width: 200px;
+}
+
+.map-floating-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  color: #1e293b;
+}
+
+.map-floating-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+  cursor: pointer;
+  user-select: none;
+}
+
+.map-layer-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #334155;
+  margin-top: 6px;
+  cursor: pointer;
+}
+
+.map-layer-item input[type="checkbox"] {
+  accent-color: #059669;
+  cursor: pointer;
+}
+
+.map-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #475569;
+  margin-top: 5px;
+}
+
+.map-legend-bar {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+/* Floating Alert Popups */
+.map-incident-popup {
+  position: absolute;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-light);
+  width: 190px;
+  padding: 8px 10px;
+  z-index: 20;
+  font-size: 11px;
+  transition: transform 0.2s ease;
+}
+
+.map-incident-popup:hover {
+  transform: scale(1.02);
+  z-index: 25;
+}
+
+.map-incident-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.map-incident-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.map-incident-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 2px;
+  line-height: 1.2;
+}
+
+.map-incident-desc {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+.map-incident-time {
+  font-size: 9px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-top: 3px;
+}
+
+.map-incident-thumb {
+  width: 100%;
+  height: 60px;
+  border-radius: 4px;
+  object-fit: cover;
+  margin-top: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Floating Right Controls */
+.map-floating-controls-right {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 15;
+}
+
+.map-floating-controls-bottom-right {
+  position: absolute;
+  right: 16px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 15;
+}
+
+.map-ctrl-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.map-ctrl-btn:hover {
+  background: #f8fafc;
+  color: #059669;
+  border-color: #059669;
+}
+
+/* Bottom Analytics 3-Column Grid */
+.live-map-analytics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 1280px) {
+  .live-map-analytics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Route Comparison Cards */
+.route-option-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .route-option-cards-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.route-option-box {
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--bg-card);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.route-option-box.recommended {
+  background: #F0FDF4;
+  border-color: #86EFAC;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
+}
+
+.route-option-box.affected {
+  background: #FEF2F2;
+  border-color: #FECACA;
+}
+
+.route-option-box.alternate {
+  background: #EFF6FF;
+  border-color: #BFDBFE;
+}
+
+/* Live Map Bottom Status Bar */
+.live-map-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: 11px;
+  color: var(--text-muted);
+}

@@ -1,12 +1,58 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FIELD_REPORTS_TABLE, RECENT_ALERTS, LIVE_VEHICLES_LIST } from '@/data/admin/mockData';
 import ApiClient from '@/lib/api';
 import { subscribeToVehiclePositions, subscribeToAlerts } from '@/lib/socket';
 
+const pageToPath = {
+  'dashboard': '/admin',
+  'live-map': '/admin/live-map',
+  'ai-predictions': '/admin/ai-predictions',
+  'route-optimization': '/admin/route-optimization',
+  'vehicle-tracking': '/admin/vehicle-tracking',
+  'alerts': '/admin/alerts',
+  'field-reports': '/admin/field-reports',
+  'analytics': '/admin/analytics',
+  'emergency': '/admin/emergency',
+  'users': '/admin/users',
+  'settings': '/admin/settings',
+};
+
+const pathToPage = {
+  '/admin': 'dashboard',
+  '/admin/': 'dashboard',
+  '/admin/dashboard': 'dashboard',
+  '/admin/live-map': 'live-map',
+  '/admin/ai-predictions': 'ai-predictions',
+  '/admin/route-optimization': 'route-optimization',
+  '/admin/vehicle-tracking': 'vehicle-tracking',
+  '/admin/alerts': 'alerts',
+  '/admin/field-reports': 'field-reports',
+  '/admin/analytics': 'analytics',
+  '/admin/emergency': 'emergency',
+  '/admin/users': 'users',
+  '/admin/settings': 'settings',
+};
+
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [currentPage, setCurrentPage] = useState('dashboard');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const currentPage = pathToPage[location.pathname] || (
+    location.pathname.startsWith('/admin/')
+      ? location.pathname.replace('/admin/', '').split('/')[0]
+      : 'dashboard'
+  );
+
+  const setCurrentPage = (page) => {
+    const targetPath = pageToPath[page] || `/admin/${page}`;
+    if (location.pathname !== targetPath) {
+      navigate(targetPath);
+    }
+  };
+
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   
