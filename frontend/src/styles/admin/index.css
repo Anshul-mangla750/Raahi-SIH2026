@@ -441,9 +441,35 @@
 .dashboard-bottom-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: min-content;
   gap: 20px;
   margin-bottom: 24px;
   align-items: stretch;
+}
+
+.district-table-body {
+  max-height: 185px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-medium, #cbd5e1) transparent;
+}
+
+.district-table-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.district-table-body::-webkit-scrollbar-track {
+  background: var(--bg-app, #f1f5f9);
+  border-radius: 4px;
+}
+
+.district-table-body::-webkit-scrollbar-thumb {
+  background: var(--border-medium, #cbd5e1);
+  border-radius: 4px;
+}
+
+.district-table-body::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted, #94a3b8);
 }
 
 @media (max-width: 1280px) {

@@ -32,9 +32,26 @@ export const DistrictConnectivityTable = () => {
     fetchDistricts();
   }, []);
 
+  const columnGridStyle = {
+    display: 'grid',
+    gridTemplateColumns: '25% 11% 13% 11% 11% 29%',
+    alignItems: 'center',
+  };
+
   return (
-    <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '16px 20px' }}>
-      <div className="card-header" style={{ marginBottom: '12px' }}>
+    <div
+      className="card district-connectivity-card"
+      style={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '16px 20px',
+        overflow: 'hidden',
+        minHeight: 0,
+      }}
+    >
+      {/* 1. Fixed Card Header */}
+      <div className="card-header" style={{ marginBottom: '10px', flexShrink: 0 }}>
         <h2 className="card-title" style={{ margin: 0, fontSize: '15px' }}>District-wise Connectivity</h2>
         <button className="card-link" onClick={() => setCurrentPage('analytics')}>
           <span>View All</span>
@@ -42,71 +59,120 @@ export const DistrictConnectivityTable = () => {
         </button>
       </div>
 
-      <div className="table-container" style={{ flex: 1, overflowX: 'auto' }}>
-        <table className="custom-table" style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              <th style={{ padding: '8px 10px', textAlign: 'left', whiteSpace: 'nowrap', width: '22%' }}>DISTRICT</th>
-              <th style={{ padding: '8px 8px', textAlign: 'center', whiteSpace: 'nowrap', width: '11%' }}>GOOD</th>
-              <th style={{ padding: '8px 8px', textAlign: 'center', whiteSpace: 'nowrap', width: '13%' }}>MODERATE</th>
-              <th style={{ padding: '8px 8px', textAlign: 'center', whiteSpace: 'nowrap', width: '12%' }}>AT RISK</th>
-              <th style={{ padding: '8px 8px', textAlign: 'center', whiteSpace: 'nowrap', width: '12%' }}>BLOCKED</th>
-              <th style={{ padding: '8px 10px', textAlign: 'left', whiteSpace: 'nowrap', width: '30%' }}>CONNECTIVITY SCORE</th>
-            </tr>
-          </thead>
-          <tbody>
-            {districtsList.map((d, i) => {
-              const fillColor = d.score >= 70 ? '#10B981' : d.score >= 50 ? '#F59E0B' : '#EF4444';
-              return (
-                <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                  <td style={{ padding: '9px 10px', fontWeight: 600, whiteSpace: 'nowrap', color: 'var(--text-primary)' }}>
-                    {d.district}
-                  </td>
-                  <td style={{ padding: '9px 8px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                    {d.good}
-                  </td>
-                  <td style={{ padding: '9px 8px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                    {d.moderate}
-                  </td>
-                  <td style={{ padding: '9px 8px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                    {d.atRisk}
-                  </td>
-                  <td style={{ padding: '9px 8px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                    {d.blocked}
-                  </td>
-                  <td style={{ padding: '9px 10px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: '110px' }}>
-                      <div style={{ flex: 1, height: '6px', borderRadius: '9999px', backgroundColor: '#E2E8F0', overflow: 'hidden' }}>
-                        <div
-                          style={{
-                            height: '100%',
-                            width: `${d.score}%`,
-                            backgroundColor: fillColor,
-                            borderRadius: '9999px',
-                            transition: 'width 0.4s ease',
-                          }}
-                        />
-                      </div>
-                      <span style={{ fontSize: '11px', fontWeight: 700, minWidth: '32px', textAlign: 'right', color: 'var(--text-primary)' }}>
-                        {d.score}%
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      {/* 2. Fixed Table Column Headers */}
+      <div
+        className="district-table-header"
+        style={{
+          ...columnGridStyle,
+          flexShrink: 0,
+          backgroundColor: 'var(--bg-card-alt, #F8FAFC)',
+          padding: '6px 10px',
+          borderRadius: '4px',
+          fontSize: '11px',
+          fontWeight: 600,
+          color: 'var(--text-muted)',
+          letterSpacing: '0.03em',
+          marginBottom: '2px',
+          userSelect: 'none',
+        }}
+      >
+        <div>DISTRICT</div>
+        <div style={{ textAlign: 'center' }}>GOOD</div>
+        <div style={{ textAlign: 'center' }}>MODERATE</div>
+        <div style={{ textAlign: 'center' }}>AT RISK</div>
+        <div style={{ textAlign: 'center' }}>BLOCKED</div>
+        <div style={{ paddingLeft: '4px' }}>CONNECTIVITY SCORE</div>
       </div>
 
-      {/* Legend below table */}
+      {/* 3. Dedicated Scrollable District Rows Area - constrained to 5-6 rows */}
+      <div
+        className="district-table-body custom-scrollbar"
+        style={{
+          flex: 1,
+          minHeight: 0,
+          maxHeight: '185px',
+          height: '185px',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          paddingRight: '4px',
+        }}
+      >
+        {districtsList.map((d, i) => {
+          const fillColor = d.score >= 70 ? '#10B981' : d.score >= 50 ? '#F59E0B' : '#EF4444';
+          return (
+            <div
+              key={i}
+              style={{
+                ...columnGridStyle,
+                padding: '6px 10px',
+                borderBottom: '1px solid var(--border-subtle)',
+                fontSize: '12px',
+                transition: 'background-color 0.15s ease',
+              }}
+              className="district-row-item"
+            >
+              <div
+                style={{
+                  fontWeight: 600,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  color: 'var(--text-primary)',
+                }}
+                title={d.district}
+              >
+                {d.district}
+              </div>
+              <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{d.good}</div>
+              <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{d.moderate}</div>
+              <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{d.atRisk}</div>
+              <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{d.blocked}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingLeft: '4px' }}>
+                <div
+                  style={{
+                    flex: 1,
+                    height: '5px',
+                    borderRadius: '9999px',
+                    backgroundColor: '#E2E8F0',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      height: '100%',
+                      width: `${d.score}%`,
+                      backgroundColor: fillColor,
+                      borderRadius: '9999px',
+                      transition: 'width 0.4s ease',
+                    }}
+                  />
+                </div>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    minWidth: '30px',
+                    textAlign: 'right',
+                    color: 'var(--text-primary)',
+                  }}
+                >
+                  {d.score}%
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 4. Fixed Bottom Status Legend */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           gap: '16px',
+          flexShrink: 0,
           marginTop: 'auto',
-          paddingTop: '12px',
+          paddingTop: '10px',
           borderTop: '1px solid var(--border-subtle)',
           fontSize: '11px',
           color: 'var(--text-muted)',

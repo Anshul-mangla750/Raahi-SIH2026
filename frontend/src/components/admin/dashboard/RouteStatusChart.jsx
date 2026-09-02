@@ -16,7 +16,7 @@ export const RouteStatusChart = () => {
 
   return (
     <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '16px 20px' }}>
-      <div className="card-header" style={{ marginBottom: '12px' }}>
+      <div className="card-header" style={{ marginBottom: '10px', flexShrink: 0 }}>
         <h2 className="card-title" style={{ margin: 0, fontSize: '15px' }}>Route Status Overview</h2>
         <button className="card-link" onClick={() => setCurrentPage('analytics')}>
           <span>View Full Report</span>
