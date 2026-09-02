@@ -162,6 +162,12 @@ export const TopHeader = () => {
             ref={searchInputRef}
             type="text"
             className="header-search-input"
+            style={{
+              paddingLeft: '42px',
+              paddingRight: '48px',
+              height: '38px',
+              width: '100%',
+            }}
             placeholder="Search location, route, vehicle or incident..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

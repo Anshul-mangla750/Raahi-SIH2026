@@ -935,12 +935,12 @@ export const LiveMapPage = () => {
 
           {/* Recent Incidents Sub-list */}
           <div style={{ borderTop: '1px solid var(--border-subtle)', marginTop: '8px', paddingTop: '8px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
               <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-primary)' }}>Recent Incidents</span>
               <a href="/admin/alerts" style={{ fontSize: '10px', color: '#059669', fontWeight: 600 }}>View All</a>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', fontSize: '11px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '11px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <AlertTriangle size={12} color="#EF4444" />
