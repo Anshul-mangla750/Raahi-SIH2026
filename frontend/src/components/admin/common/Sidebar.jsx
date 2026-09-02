@@ -8,6 +8,7 @@ import {
   Bell,
   FileText,
   BarChart3,
+  Users,
   Settings,
   AlertTriangle,
   PlusCircle,
@@ -42,7 +43,8 @@ export const Sidebar = () => {
     { id: 'field-reports', label: 'Field Reports', icon: FileText },
     { id: 'analytics', label: 'Analytics & Reports', icon: BarChart3 },
     { id: 'emergency', label: 'Emergency Mode', icon: AlertTriangle, isEmergency: true },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'users', label: 'User Management', icon: Users },
+    { id: 'settings', label: 'System Settings', icon: Settings },
   ];
 
   return (
@@ -74,7 +76,7 @@ export const Sidebar = () => {
           </div>
           {!sidebarCollapsed && (
             <div className="brand-info">
-              <span className="brand-name">RAAHI</span>
+              <span className="brand-name">NER LogiSmart</span>
               <span className="brand-tagline">Smart Routes, Safe Deliveries</span>
             </div>
           )}

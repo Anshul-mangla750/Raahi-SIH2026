@@ -8,6 +8,7 @@ import {
   Calendar,
   CloudSun,
   ChevronDown,
+  MapPin,
 } from 'lucide-react';
 import { StatCard } from '@/components/admin/common/StatCard';
 import { LiveAccessibilityMap } from '@/components/admin/dashboard/LiveAccessibilityMap';
@@ -37,13 +38,22 @@ export const DashboardPage = () => {
       <div className="page-header-row">
         <div className="page-title-group">
           <h1>Welcome back, {user?.name || 'Admin'} 👋</h1>
-          <p>Here's real-time intelligence across the North Eastern Region today.</p>
+          <p>Here's what's happening across the Northern Eastern Region today.</p>
         </div>
 
         <div className="header-widgets-group">
+          {/* Location Selector pill */}
+          <div className="info-pill-card" style={{ cursor: 'pointer' }}>
+            <MapPin size={16} color="var(--primary-600)" />
+            <div className="info-pill-text">
+              <span className="info-pill-primary">Assam / NER Region</span>
+            </div>
+            <ChevronDown size={14} color="var(--text-muted)" />
+          </div>
+
           {/* Date pill */}
           <div className="info-pill-card">
-            <Calendar size={18} color="var(--text-muted)" />
+            <Calendar size={16} color="var(--text-muted)" />
             <div className="info-pill-text">
               <span className="info-pill-primary">{todayDate}, {todayTime}</span>
             </div>
@@ -51,9 +61,9 @@ export const DashboardPage = () => {
 
           {/* Weather pill */}
           <div className="info-pill-card" style={{ cursor: 'pointer' }}>
-            <CloudSun size={20} color="#F59E0B" />
+            <CloudSun size={18} color="#F59E0B" />
             <div className="info-pill-text">
-              <span className="info-pill-primary">24°C</span>
+              <span className="info-pill-primary">24°C • Heavy Rain Risk</span>
               <span className="info-pill-secondary">Guwahati (IMD)</span>
             </div>
             <ChevronDown size={14} color="var(--text-muted)" />

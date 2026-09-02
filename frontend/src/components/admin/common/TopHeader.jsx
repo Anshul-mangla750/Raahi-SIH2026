@@ -149,7 +149,7 @@ export const TopHeader = () => {
             ref={searchInputRef}
             type="text"
             className="header-search-input"
-            placeholder="Search corridors, fleet vehicles, alerts (Ctrl + K)..."
+            placeholder="ridors, fleet vehicles, alerts (Ctrl + K)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}

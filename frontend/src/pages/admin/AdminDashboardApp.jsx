@@ -40,6 +40,8 @@ function AdminContent() {
         return <AnalyticsPage />;
       case 'emergency':
         return <EmergencyModePage />;
+      case 'users':
+        return <SettingsPage initialTab="user-management" />;
       case 'settings':
         return <SettingsPage />;
       default:

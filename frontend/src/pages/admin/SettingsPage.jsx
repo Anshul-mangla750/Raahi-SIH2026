@@ -19,9 +19,9 @@ import {
 import { useApp } from '@/contexts/AppContext';
 import { WEATHER_DATA } from '@/data/admin/mockData';
 
-export const SettingsPage = () => {
+export const SettingsPage = ({ initialTab = 'general' }) => {
   const { addToast } = useApp();
-  const [activeTab, setActiveTab] = useState('general');
+  const [activeTab, setActiveTab] = useState(initialTab);
 
   // Form State
   const [orgName, setOrgName] = useState('North Eastern Regional Logistics Department');

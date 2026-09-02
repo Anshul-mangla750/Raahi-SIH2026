@@ -174,9 +174,9 @@
 }
 
 .stat-icon-wrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-md);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -432,9 +432,10 @@
 
 .dashboard-four-col-grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1.2fr 1.4fr;
-  gap: 20px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
   margin-bottom: 24px;
+  align-items: stretch;
 }
 
 .dashboard-bottom-grid {

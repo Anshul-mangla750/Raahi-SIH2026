@@ -18,9 +18,9 @@ export const StatCard = ({
       {Icon && (
         <div
           className="stat-icon-wrapper"
-          style={{ backgroundColor: iconBg, color: iconColor }}
+          style={{ backgroundColor: iconBg, color: iconColor, borderRadius: '50%' }}
         >
-          <Icon size={24} />
+          <Icon size={22} />
         </div>
       )}
       <div className="stat-info">
