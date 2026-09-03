@@ -1108,3 +1108,25 @@
   border-color: #059669;
   color: #ffffff;
 }
+
+/* Field Reports Page Responsive Grids */
+@media (max-width: 1200px) {
+  .field-reports-stat-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .field-reports-stat-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  .field-reports-main-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .field-reports-bottom-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
