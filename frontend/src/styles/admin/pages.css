@@ -2,45 +2,138 @@
 .route-query-bar {
   background-color: var(--bg-card);
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: 16px 20px;
+  border-radius: 8px;
+  padding: 14px 18px;
   display: grid;
-  grid-template-columns: 1.5fr 1.5fr 1fr auto auto;
-  gap: 16px;
-  align-items: center;
-  margin-bottom: 24px;
+  grid-template-columns: 1.2fr 1.2fr 1fr auto;
+  gap: 14px;
+  align-items: flex-end;
   box-shadow: var(--shadow-xs);
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .route-query-bar {
+    grid-template-columns: 1fr 1fr;
+  }
+  .route-map-summary-grid,
+  .route-analytics-triad,
+  .route-bottom-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .route-query-bar {
+    grid-template-columns: 1fr;
+  }
 }
 
 .query-field-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .query-field-label {
   font-size: 11px;
   font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
+  color: var(--text-secondary);
 }
 
 .query-input-wrap {
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: var(--bg-card-alt);
+  background-color: #ffffff;
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  padding: 8px 12px;
+  border-radius: 6px;
+  padding: 0 10px;
+  height: 38px;
+  transition: border-color 0.15s ease;
 }
 
-.query-input-wrap input, .query-input-wrap select {
+.query-input-wrap:focus-within {
+  border-color: #059669;
+}
+
+.query-input-wrap input,
+.query-input-wrap select {
   border: none;
   background: transparent;
   padding: 0;
   width: 100%;
+  font-size: 12.5px;
+  color: var(--text-primary);
   box-shadow: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.query-icon {
+  flex-shrink: 0;
+}
+
+.query-chevron {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.query-clear-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 0 2px;
+  display: flex;
+  align-items: center;
+}
+
+.query-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-optimize-primary {
+  height: 38px;
+  padding: 0 18px;
+  background-color: #047857;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+}
+
+.btn-optimize-primary:hover {
+  background-color: #065F46;
+}
+
+.btn-clear-secondary {
+  height: 38px;
+  padding: 0 16px;
+  background-color: #ffffff;
+  color: #334155;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-clear-secondary:hover {
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
 }
 
 /* Route Timeline Sequence */
