@@ -7,7 +7,7 @@ export const RecentTripsTable = () => {
   const { openModal } = useApp();
 
   return (
-    <div className="card">
+    <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div className="card-header" style={{ marginBottom: '12px' }}>
         <h2 className="card-title" style={{ margin: 0 }}>Recent Trips</h2>
         <button
@@ -19,7 +19,7 @@ export const RecentTripsTable = () => {
         </button>
       </div>
 
-      <div className="table-container">
+      <div className="table-container" style={{ flex: 1 }}>
         <table className="custom-table">
           <thead>
             <tr>
