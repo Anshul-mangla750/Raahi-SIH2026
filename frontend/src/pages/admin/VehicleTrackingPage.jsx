@@ -113,7 +113,7 @@ export const VehicleTrackingPage = () => {
       </div>
 
       {/* Bottom Row: Recent Trips & Vehicle Performance */}
-      <div className="grid-2" style={{ gridTemplateColumns: '1.5fr 1fr', marginBottom: '24px' }}>
+      <div className="grid-2" style={{ gridTemplateColumns: '1.9fr 0.7fr', marginBottom: '24px' }}>
         <RecentTripsTable />
         <VehiclePerformanceCard />
       </div>

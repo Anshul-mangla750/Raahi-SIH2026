@@ -19,8 +19,8 @@ export const VehiclePerformanceCard = () => {
       {/* Header with Title, (This Month) and View Report Link */}
       <div className="card-header" style={{ marginBottom: '8px', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-          <h2 className="card-title" style={{ margin: 0, fontSize: '15px' }}>Vehicle Performance</h2>
-          <span style={{ fontSize: '11.5px', color: 'var(--text-muted)', fontWeight: 500 }}>(This Month)</span>
+          <h3 className="card-title" style={{ margin: 0, fontSize: '15px' }}>Vehicle Performance</h3>
+          <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 500 }}>(This Month)</span>
         </div>
         <button
           className="card-link"
