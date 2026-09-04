@@ -12,7 +12,7 @@ export const ReportsByTypeChart = () => {
   ];
 
   const total = 128;
-  const size = 125;
+  const size = 130;
   const strokeWidth = 15;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -37,6 +37,7 @@ export const ReportsByTypeChart = () => {
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
         display: 'flex',
         flexDirection: 'column',
+        minHeight: '250px',
       }}
     >
       {/* Header */}
@@ -45,7 +46,7 @@ export const ReportsByTypeChart = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          marginBottom: '8px',
+          marginBottom: '10px',
         }}
       >
         <h2 style={{ margin: 0, fontSize: '14.5px', fontWeight: 700, color: 'var(--text-primary)' }}>
@@ -67,8 +68,18 @@ export const ReportsByTypeChart = () => {
         </button>
       </div>
 
-      {/* Donut and Legend */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', padding: '6px 0' }}>
+      {/* Donut and Legend - Centered vertically and horizontally inside card */}
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '18px',
+          padding: '6px 0',
+          width: '100%',
+        }}
+      >
         {/* SVG Donut */}
         <div style={{ position: 'relative', width: `${size}px`, height: `${size}px`, flexShrink: 0 }}>
           <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ transform: 'rotate(-90deg)' }}>
@@ -107,7 +118,7 @@ export const ReportsByTypeChart = () => {
               pointerEvents: 'none',
             }}
           >
-            <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1 }}>
+            <span style={{ fontSize: '18.5px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1 }}>
               128
             </span>
             <span style={{ fontSize: '9.5px', color: 'var(--text-muted)', marginTop: '2px' }}>
@@ -117,7 +128,7 @@ export const ReportsByTypeChart = () => {
         </div>
 
         {/* Legend */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '7px' }}>
           {items.map((item, idx) => (
             <div
               key={idx}
@@ -131,8 +142,8 @@ export const ReportsByTypeChart = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span
                   style={{
-                    width: '7px',
-                    height: '7px',
+                    width: '7.5px',
+                    height: '7.5px',
                     borderRadius: '50%',
                     backgroundColor: item.color,
                     flexShrink: 0,
