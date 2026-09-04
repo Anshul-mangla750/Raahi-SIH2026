@@ -35,14 +35,14 @@ export const AIRiskPredictionCard = () => {
         </button>
       </div>
 
-      {/* Main Content: Left Donut + Right Legend */}
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', padding: '4px 0' }}>
+      {/* Main Content: Left Donut + Right Legend (Centered Horizontally) */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px 0', width: '100%' }}>
         <DonutChart
           data={riskData}
           total={87}
           totalLabel="Total Risks"
-          size={135}
-          strokeWidth={15}
+          size={140}
+          strokeWidth={16}
         />
       </div>
 
