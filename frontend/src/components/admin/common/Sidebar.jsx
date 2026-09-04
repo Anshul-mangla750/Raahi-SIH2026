@@ -22,6 +22,7 @@ import {
   Fuel,
   Wrench,
   Network,
+  ShieldCheck,
 } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 
@@ -49,6 +50,7 @@ export const Sidebar = () => {
     { id: 'fuel-management', label: 'Fuel Management', icon: Fuel },
     { id: 'driver-management', label: 'Driver Management', icon: Users },
     { id: 'district-management', label: 'District Management', icon: Network },
+    { id: 'user-management', label: 'User Management', icon: ShieldCheck },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 

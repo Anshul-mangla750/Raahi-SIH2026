@@ -21,6 +21,9 @@ import { FieldReportsPage } from './pages/admin/FieldReportsPage';
 import { AnalyticsPage } from './pages/admin/AnalyticsPage';
 import { EmergencyModePage } from './pages/admin/EmergencyModePage';
 import { DistrictManagementPage } from './pages/admin/DistrictManagementPage';
+import { FuelManagementPage } from './pages/admin/FuelManagementPage';
+import { DriverManagementPage } from './pages/admin/DriverManagementPage';
+import { UserManagementPage } from './pages/admin/UserManagementPage';
 import { SettingsPage } from './pages/admin/SettingsPage';
 
 export default function App() {
@@ -57,7 +60,10 @@ export default function App() {
                 <Route path="analytics" element={<AnalyticsPage />} />
                 <Route path="emergency" element={<EmergencyModePage />} />
                 <Route path="district-management" element={<DistrictManagementPage />} />
-                <Route path="users" element={<SettingsPage initialTab="user-management" />} />
+                <Route path="fuel-management" element={<FuelManagementPage />} />
+                <Route path="driver-management" element={<DriverManagementPage />} />
+                <Route path="user-management" element={<UserManagementPage />} />
+                <Route path="users" element={<UserManagementPage />} />
                 <Route path="settings" element={<SettingsPage />} />
               </Route>
 

@@ -14,11 +14,11 @@ const pageToPath = {
   'emergency': '/admin/emergency',
   'field-reports': '/admin/field-reports',
   'analytics': '/admin/analytics',
-  'fuel-management': '/admin/analytics',
-  'driver-management': '/admin/users',
+  'fuel-management': '/admin/fuel-management',
+  'driver-management': '/admin/driver-management',
   'district-management': '/admin/district-management',
-  'maintenance': '/admin/vehicle-tracking',
-  'users': '/admin/users',
+  'user-management': '/admin/user-management',
+  'users': '/admin/user-management',
   'settings': '/admin/settings',
 };
 
@@ -34,8 +34,11 @@ const pathToPage = {
   '/admin/field-reports': 'field-reports',
   '/admin/analytics': 'analytics',
   '/admin/emergency': 'emergency',
+  '/admin/fuel-management': 'fuel-management',
+  '/admin/driver-management': 'driver-management',
   '/admin/district-management': 'district-management',
-  '/admin/users': 'users',
+  '/admin/user-management': 'user-management',
+  '/admin/users': 'user-management',
   '/admin/settings': 'settings',
 };
 

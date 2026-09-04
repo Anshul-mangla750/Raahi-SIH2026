@@ -32,6 +32,8 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { AdminLeafletMap } from '@/components/admin/maps/AdminLeafletMap';
+
 export const LiveMapPage = () => {
   // Map Layer Toggles
   const [layers, setLayers] = useState({
@@ -48,27 +50,15 @@ export const LiveMapPage = () => {
   const [weatherRadarOpen, setWeatherRadarOpen] = useState(true);
   const [radarPlaying, setRadarPlaying] = useState(true);
   const [radarTime, setRadarTime] = useState('10:00');
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [zoomLevel, setZoomLevel] = useState(1);
+  const [mapCenter, setMapCenter] = useState([26.15, 92.50]);
+  const [mapZoom, setMapZoom] = useState(7.6);
   const [selectedRoute, setSelectedRoute] = useState('recommended');
-
-  // Popups visibility
-  const [visiblePopups, setVisiblePopups] = useState({
-    landslide: true,
-    flood: true,
-    blocked: true,
-    heavyRain: true,
-  });
 
   // Active vehicles tab
   const [activeVehicleTab, setActiveVehicleTab] = useState('live'); // 'live' | 'all'
 
   const toggleLayer = (key) => {
     setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  const closePopup = (key) => {
-    setVisiblePopups((prev) => ({ ...prev, [key]: false }));
   };
 
   const activeVehiclesData = [
@@ -78,6 +68,390 @@ export const LiveMapPage = () => {
     { id: 'NL01GH3456', route: 'Dimapur - Kohima', speed: '0 km/h', status: 'Stopped', statusClass: 'badge-danger' },
     { id: 'MN01IJ7890', route: 'Imphal - Ukhrul', speed: '52 km/h', status: 'On Route', statusClass: 'badge-success' },
   ];
+
+  // Dynamic Leaflet Markers
+  const cityHubMarkers = [
+    {
+      id: 'city-guwahati',
+      position: [26.1445, 91.7362],
+      iconType: 'cluster',
+      color: '#2563EB',
+      label: 'GHY',
+      subtext: 'Guwahati (Hub)',
+      popupContent: (
+        <div>
+          <strong>Guwahati Central Logistics Hub</strong>
+          <p style={{ fontSize: '11px', color: '#64748B', margin: '2px 0 0' }}>Primary Regional Gateway • 32 Active Outbound Convoys</p>
+        </div>
+      ),
+    },
+    {
+      id: 'city-shillong',
+      position: [25.5788, 91.8933],
+      iconType: 'stop',
+      color: '#0F172A',
+      label: 'SHL',
+      subtext: 'Shillong',
+      popupContent: <div><strong>Shillong Transit Hub</strong><p style={{ fontSize: '11px', color: '#64748B' }}>Meghalaya Sector</p></div>,
+    },
+    {
+      id: 'city-nagaon',
+      position: [26.3452, 92.6840],
+      iconType: 'stop',
+      color: '#0F172A',
+      label: 'NAG',
+      subtext: 'Nagaon',
+      popupContent: <div><strong>Nagaon Junction</strong><p style={{ fontSize: '11px', color: '#64748B' }}>Central Assam Corridor</p></div>,
+    },
+    {
+      id: 'city-tezpur',
+      position: [26.6528, 92.7926],
+      iconType: 'stop',
+      color: '#0F172A',
+      label: 'TEZ',
+      subtext: 'Tezpur',
+      popupContent: <div><strong>Tezpur Logistics Hub</strong><p style={{ fontSize: '11px', color: '#64748B' }}>North Bank Gateway</p></div>,
+    },
+    {
+      id: 'city-dimapur',
+      position: [25.9094, 93.7266],
+      iconType: 'stop',
+      color: '#0F172A',
+      label: 'DIM',
+      subtext: 'Dimapur',
+      popupContent: <div><strong>Dimapur Supply Depo</strong><p style={{ fontSize: '11px', color: '#64748B' }}>Nagaland Border Gateway</p></div>,
+    },
+    {
+      id: 'city-kohima',
+      position: [25.6751, 94.1086],
+      iconType: 'stop',
+      color: '#0F172A',
+      label: 'KOH',
+      subtext: 'Kohima',
+      popupContent: <div><strong>Kohima Station</strong><p style={{ fontSize: '11px', color: '#64748B' }}>Mountain Route Terminal</p></div>,
+    },
+    {
+      id: 'city-imphal',
+      position: [24.8170, 93.9368],
+      iconType: 'stop',
+      color: '#0F172A',
+      label: 'IMP',
+      subtext: 'Imphal',
+      popupContent: <div><strong>Imphal Depot</strong><p style={{ fontSize: '11px', color: '#64748B' }}>Manipur Sector Distribution</p></div>,
+    },
+    {
+      id: 'city-silchar',
+      position: [24.8333, 92.7789],
+      iconType: 'stop',
+      color: '#0F172A',
+      label: 'SIL',
+      subtext: 'Silchar',
+      popupContent: <div><strong>Silchar Junction</strong><p style={{ fontSize: '11px', color: '#64748B' }}>Barak Valley Hub</p></div>,
+    },
+    {
+      id: 'city-aizawl',
+      position: [23.7271, 92.7176],
+      iconType: 'stop',
+      color: '#0F172A',
+      label: 'AIZ',
+      subtext: 'Aizawl',
+      popupContent: <div><strong>Aizawl Central Hub</strong><p style={{ fontSize: '11px', color: '#64748B' }}>Mizoram Sector Terminal</p></div>,
+    },
+    {
+      id: 'city-itanagar',
+      position: [27.0844, 93.6053],
+      iconType: 'stop',
+      color: '#0F172A',
+      label: 'ITA',
+      subtext: 'Itanagar',
+      popupContent: <div><strong>Itanagar Forward Depot</strong><p style={{ fontSize: '11px', color: '#64748B' }}>Arunachal Sector</p></div>,
+    },
+  ];
+
+  const vehicleMarkers = layers.vehicles
+    ? [
+        {
+          id: 'v-AS01AB1234',
+          position: [26.70, 93.10],
+          iconType: 'truck',
+          color: '#10B981',
+          size: 30,
+          popupContent: (
+            <div style={{ minWidth: '150px' }}>
+              <strong style={{ fontSize: '13px', color: '#0F172A' }}>AS01AB1234</strong>
+              <div style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>Guwahati → Itanagar</div>
+              <div style={{ fontSize: '11px', color: '#10B981', fontWeight: 700, marginTop: '2px' }}>Speed: 65 km/h • On Route</div>
+            </div>
+          ),
+        },
+        {
+          id: 'v-AS02CD5678',
+          position: [24.25, 92.75],
+          iconType: 'truck',
+          color: '#D97706',
+          size: 30,
+          popupContent: (
+            <div style={{ minWidth: '150px' }}>
+              <strong style={{ fontSize: '13px', color: '#0F172A' }}>AS02CD5678</strong>
+              <div style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>Silchar → Aizawl</div>
+              <div style={{ fontSize: '11px', color: '#D97706', fontWeight: 700, marginTop: '2px' }}>Speed: 22 km/h • Delayed</div>
+            </div>
+          ),
+        },
+        {
+          id: 'v-ML05EF9012',
+          position: [25.55, 90.95],
+          iconType: 'truck',
+          color: '#10B981',
+          size: 30,
+          popupContent: (
+            <div style={{ minWidth: '150px' }}>
+              <strong style={{ fontSize: '13px', color: '#0F172A' }}>ML05EF9012</strong>
+              <div style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>Shillong → Tura</div>
+              <div style={{ fontSize: '11px', color: '#10B981', fontWeight: 700, marginTop: '2px' }}>Speed: 48 km/h • On Route</div>
+            </div>
+          ),
+        },
+        {
+          id: 'v-NL01GH3456',
+          position: [25.78, 93.92],
+          iconType: 'truck',
+          color: '#EF4444',
+          size: 30,
+          popupContent: (
+            <div style={{ minWidth: '150px' }}>
+              <strong style={{ fontSize: '13px', color: '#0F172A' }}>NL01GH3456</strong>
+              <div style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>Dimapur → Kohima</div>
+              <div style={{ fontSize: '11px', color: '#EF4444', fontWeight: 700, marginTop: '2px' }}>Speed: 0 km/h • Stopped</div>
+            </div>
+          ),
+        },
+        {
+          id: 'v-MN01IJ7890',
+          position: [25.02, 94.20],
+          iconType: 'truck',
+          color: '#10B981',
+          size: 30,
+          popupContent: (
+            <div style={{ minWidth: '150px' }}>
+              <strong style={{ fontSize: '13px', color: '#0F172A' }}>MN01IJ7890</strong>
+              <div style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>Imphal → Ukhrul</div>
+              <div style={{ fontSize: '11px', color: '#10B981', fontWeight: 700, marginTop: '2px' }}>Speed: 52 km/h • On Route</div>
+            </div>
+          ),
+        },
+      ]
+    : [];
+
+  const incidentMarkers = layers.incidents
+    ? [
+        {
+          id: 'inc-landslide',
+          position: [26.08, 91.85],
+          iconType: 'hazard',
+          color: '#EF4444',
+          size: 32,
+          popupContent: (
+            <div style={{ minWidth: '170px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#EF4444', fontWeight: 800, fontSize: '11px' }}>
+                <AlertTriangle size={13} /> Landslide Reported
+              </div>
+              <div style={{ fontWeight: 700, color: '#0F172A', fontSize: '12px', marginTop: '3px' }}>NH-13A (Jorabat Section)</div>
+              <div style={{ fontSize: '11px', color: '#64748B' }}>Near Sonapur, Assam • 10:15 AM</div>
+              <div style={{ color: '#EF4444', fontSize: '11px', fontWeight: 600, marginTop: '4px' }}>Traffic halted. Clearance in progress.</div>
+            </div>
+          ),
+        },
+        {
+          id: 'inc-flood',
+          position: [24.90, 92.55],
+          iconType: 'flood',
+          color: '#2563EB',
+          size: 32,
+          popupContent: (
+            <div style={{ minWidth: '170px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#2563EB', fontWeight: 800, fontSize: '11px' }}>
+                <Waves size={13} /> Flood Alert
+              </div>
+              <div style={{ fontWeight: 700, color: '#0F172A', fontSize: '12px', marginTop: '3px' }}>NH-27 (Near Badarpur)</div>
+              <div style={{ fontSize: '11px', color: '#64748B' }}>Assam Sector • 09:45 AM</div>
+              <div style={{ color: '#2563EB', fontSize: '11px', fontWeight: 600, marginTop: '4px' }}>Water logging 1.5ft. Heavy trucks only.</div>
+            </div>
+          ),
+        },
+        {
+          id: 'inc-blocked',
+          position: [24.70, 93.15],
+          iconType: 'alert',
+          color: '#DC2626',
+          size: 32,
+          popupContent: (
+            <div style={{ minWidth: '170px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#DC2626', fontWeight: 800, fontSize: '11px' }}>
+                <Ban size={13} /> Route Blocked
+              </div>
+              <div style={{ fontWeight: 700, color: '#0F172A', fontSize: '12px', marginTop: '3px' }}>NH-37 (Jiribam)</div>
+              <div style={{ fontSize: '11px', color: '#64748B' }}>Manipur Border • 08:50 AM</div>
+              <div style={{ color: '#DC2626', fontSize: '11px', fontWeight: 600, marginTop: '4px' }}>Bridge structural damage. Route closed.</div>
+            </div>
+          ),
+        },
+        {
+          id: 'inc-heavyrain',
+          position: [25.45, 91.65],
+          iconType: 'hazard',
+          color: '#D97706',
+          size: 32,
+          popupContent: (
+            <div style={{ minWidth: '170px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#D97706', fontWeight: 800, fontSize: '11px' }}>
+                <CloudRain size={13} /> Heavy Rainfall
+              </div>
+              <div style={{ fontWeight: 700, color: '#0F172A', fontSize: '12px', marginTop: '3px' }}>East Khasi Hills</div>
+              <div style={{ fontSize: '11px', color: '#64748B' }}>Meghalaya • 09:30 AM</div>
+              <div style={{ color: '#D97706', fontSize: '11px', fontWeight: 600, marginTop: '4px' }}>Poor visibility. Speed advisory 30 km/h.</div>
+            </div>
+          ),
+        },
+      ]
+    : [];
+
+  const allMapMarkers = [...cityHubMarkers, ...vehicleMarkers, ...incidentMarkers];
+
+  // Dynamic Leaflet Routes
+  const trafficRoutes = layers.traffic
+    ? [
+        // Smooth Traffic (Green)
+        {
+          id: 'route-ghy-nag',
+          name: 'NH-27: Guwahati to Nagaon (Smooth Flow)',
+          coordinates: [[26.1445, 91.7362], [26.25, 92.20], [26.3452, 92.6840]],
+          color: '#10B981',
+          weight: 4,
+          opacity: 0.85,
+        },
+        {
+          id: 'route-nag-tez',
+          name: 'NH-715: Nagaon to Tezpur (Smooth Flow)',
+          coordinates: [[26.3452, 92.6840], [26.50, 92.75], [26.6528, 92.7926]],
+          color: '#10B981',
+          weight: 4,
+          opacity: 0.85,
+        },
+        {
+          id: 'route-tez-ita',
+          name: 'NH-15: Tezpur to Itanagar (Smooth Flow)',
+          coordinates: [[26.6528, 92.7926], [26.85, 93.20], [27.0844, 93.6053]],
+          color: '#10B981',
+          weight: 4,
+          opacity: 0.85,
+        },
+        {
+          id: 'route-ghy-shl',
+          name: 'NH-6: Guwahati to Shillong (Smooth Flow)',
+          coordinates: [[26.1445, 91.7362], [25.85, 91.82], [25.5788, 91.8933]],
+          color: '#10B981',
+          weight: 4,
+          opacity: 0.85,
+        },
+        {
+          id: 'route-koh-imp',
+          name: 'NH-29: Kohima to Imphal (Smooth Flow)',
+          coordinates: [[25.6751, 94.1086], [25.25, 94.02], [24.8170, 93.9368]],
+          color: '#10B981',
+          weight: 4,
+          opacity: 0.85,
+        },
+        // Moderate Traffic (Yellow/Amber)
+        {
+          id: 'route-nag-dim',
+          name: 'NH-29: Nagaon to Dimapur (Moderate Congestion)',
+          coordinates: [[26.3452, 92.6840], [26.15, 93.20], [25.9094, 93.7266]],
+          color: '#F59E0B',
+          weight: 4,
+          opacity: 0.85,
+        },
+        {
+          id: 'route-dim-koh',
+          name: 'NH-29: Dimapur to Kohima (Hill Climb - Moderate)',
+          coordinates: [[25.9094, 93.7266], [25.79, 93.95], [25.6751, 94.1086]],
+          color: '#F59E0B',
+          weight: 4,
+          opacity: 0.85,
+        },
+        // Heavy Traffic (Orange)
+        {
+          id: 'route-shl-sil',
+          name: 'NH-6: Shillong to Silchar (Heavy Freight & Rain)',
+          coordinates: [[25.5788, 91.8933], [25.20, 92.35], [24.8333, 92.7789]],
+          color: '#F97316',
+          weight: 4,
+          opacity: 0.9,
+        },
+        {
+          id: 'route-sil-aiz',
+          name: 'NH-306: Silchar to Aizawl (Steep Gradients - Heavy)',
+          coordinates: [[24.8333, 92.7789], [24.28, 92.75], [23.7271, 92.7176]],
+          color: '#F97316',
+          weight: 4,
+          opacity: 0.9,
+        },
+        // Blocked Segments (Red Dashed)
+        {
+          id: 'route-block-jorabat',
+          name: 'BLOCKED: NH-13A Jorabat Section (Landslide)',
+          coordinates: [[26.12, 91.80], [26.06, 91.88]],
+          color: '#EF4444',
+          weight: 5,
+          opacity: 1,
+          dashArray: '6, 6',
+        },
+        {
+          id: 'route-block-jiribam',
+          name: 'BLOCKED: NH-37 Jiribam Bridge (Structural Failure)',
+          coordinates: [[24.75, 93.10], [24.68, 93.20]],
+          color: '#EF4444',
+          weight: 5,
+          opacity: 1,
+          dashArray: '6, 6',
+        },
+        // Alternate Route (Blue Dashed)
+        {
+          id: 'route-alt-tura',
+          name: 'AI Recommended Alternate: SH-6 via Goalpara to Tura',
+          coordinates: [
+            [26.1445, 91.7362],
+            [26.1667, 90.6167],
+            [25.80, 90.40],
+            [25.5144, 90.2201],
+          ],
+          color: '#3B82F6',
+          weight: 4,
+          opacity: 0.9,
+          dashArray: '8, 6',
+        },
+      ]
+    : [];
+
+  const districtPolygons = layers.districtBoundary
+    ? [
+        {
+          id: 'district-kamrup',
+          positions: [
+            [26.35, 91.45],
+            [26.38, 91.95],
+            [26.10, 92.05],
+            [25.95, 91.65],
+            [26.05, 91.35],
+          ],
+          color: '#059669',
+          fillColor: '#059669',
+          fillOpacity: 0.12,
+          weight: 2,
+          popup: <div><strong>Kamrup Metropolitan District</strong><p style={{ fontSize: '11px', margin: 0 }}>Hub District • 98.4% Connectivity</p></div>,
+        },
+      ]
+    : [];
 
   return (
     <div className="live-map-cockpit">
@@ -176,153 +550,23 @@ export const LiveMapPage = () => {
       </div>
 
       {/* =========================================================================
-          MAIN INTERACTIVE GIS MAP VIEWPORT
+          MAIN INTERACTIVE GIS LEAFLET MAP VIEWPORT
           ========================================================================= */}
-      <div className={`gis-map-viewport ${isFullscreen ? 'fullscreen' : ''}`}>
-        {/* Map Satellite Image Layer */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: `url('/assets/maps/northeast_satellite.jpg')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            transform: `scale(${zoomLevel})`,
-            transition: 'transform 0.2s ease-out',
-          }}
+      <div className="gis-map-viewport">
+        {/* Real Interactive Leaflet Map Component */}
+        <AdminLeafletMap
+          center={mapCenter}
+          zoom={mapZoom}
+          minZoom={6}
+          maxZoom={16}
+          height="100%"
+          tileProvider="carto"
+          markers={allMapMarkers}
+          routes={trafficRoutes}
+          polygons={districtPolygons}
+          showTileSwitch={true}
+          showControls={true}
         />
-
-        {/* Atmospheric Contrast Overlay */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.40)',
-            pointerEvents: 'none',
-          }}
-        />
-
-        {/* High-Resolution SVG Route Network */}
-        <svg
-          viewBox="0 0 1000 600"
-          preserveAspectRatio="none"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-          }}
-        >
-          {layers.traffic && (
-            <>
-              {/* Route Artery 1: Guwahati to Nagaon (Smooth - Green) */}
-              <path d="M 520 345 Q 560 350 620 355" stroke="#10B981" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-              
-              {/* Route Artery 2: Nagaon to Tezpur (Smooth - Green) */}
-              <path d="M 620 355 Q 640 310 660 270" stroke="#10B981" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-
-              {/* Route Artery 3: Tezpur to Itanagar (Smooth - Green) */}
-              <path d="M 660 270 Q 720 230 780 200" stroke="#10B981" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-
-              {/* Route Artery 4: Nagaon to Dimapur (Moderate - Yellow) */}
-              <path d="M 620 355 Q 700 370 760 385" stroke="#F59E0B" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-
-              {/* Route Artery 5: Dimapur to Kohima (Moderate - Yellow) */}
-              <path d="M 760 385 Q 770 420 780 460" stroke="#F59E0B" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-
-              {/* Route Artery 6: Kohima to Imphal (Smooth - Green) */}
-              <path d="M 780 460 Q 770 510 760 550" stroke="#10B981" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-
-              {/* Route Artery 7: Guwahati to Shillong (Smooth - Green) */}
-              <path d="M 520 345 Q 490 410 440 470" stroke="#10B981" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-
-              {/* Route Artery 8: Shillong to Silchar (Heavy - Orange) */}
-              <path d="M 440 470 Q 510 500 560 515" stroke="#F97316" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-
-              {/* Route Artery 9: Silchar to Aizawl (Heavy - Orange) */}
-              <path d="M 560 515 Q 565 560 570 600" stroke="#F97316" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-
-              {/* Blocked Segment 1: NH-13A Jorabat Section near Sonapur (Blocked - Red) */}
-              <path d="M 430 240 Q 450 250 480 270" stroke="#EF4444" strokeWidth="4.5" fill="none" strokeDasharray="6 4" strokeLinecap="round" />
-
-              {/* Blocked Segment 2: NH-37 Jiribam Bridge Damaged (Blocked - Red) */}
-              <path d="M 670 340 Q 690 380 630 460" stroke="#EF4444" strokeWidth="4.5" fill="none" strokeLinecap="round" />
-
-              {/* Alternate Route: Via SH-6 -> Goalpara -> Tura (Blue Dashed) */}
-              <path d="M 520 345 Q 500 380 460 530" stroke="#3B82F6" strokeWidth="3" strokeDasharray="6 6" fill="none" strokeLinecap="round" />
-            </>
-          )}
-        </svg>
-
-        {/* Region Labels */}
-        <div style={{ position: 'absolute', top: '16%', left: '33%', color: 'rgba(255,255,255,0.75)', fontSize: '13px', fontWeight: 700, letterSpacing: '0.05em', pointerEvents: 'none' }}>BHUTAN</div>
-        <div style={{ position: 'absolute', top: '14%', left: '55%', color: 'rgba(255,255,255,0.85)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.05em', pointerEvents: 'none' }}>ARUNACHAL PRADESH</div>
-        <div style={{ position: 'absolute', top: '32%', left: '38%', color: 'rgba(255,255,255,0.95)', fontSize: '13px', fontWeight: 800, letterSpacing: '0.06em', pointerEvents: 'none' }}>ASSAM</div>
-        <div style={{ position: 'absolute', top: '41%', left: '34%', color: 'rgba(255,255,255,0.85)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.05em', pointerEvents: 'none' }}>MEGHALAYA</div>
-        <div style={{ position: 'absolute', top: '38%', left: '80%', color: 'rgba(255,255,255,0.85)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.05em', pointerEvents: 'none' }}>NAGALAND</div>
-        <div style={{ position: 'absolute', top: '61%', left: '68%', color: 'rgba(255,255,255,0.85)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.05em', pointerEvents: 'none' }}>MIZORAM</div>
-        <div style={{ position: 'absolute', top: '61%', left: '41%', color: 'rgba(255,255,255,0.85)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.05em', pointerEvents: 'none' }}>TRIPURA</div>
-
-        {/* Cities & Hub Nodes */}
-        {/* Guwahati Hub */}
-        <div style={{ position: 'absolute', top: '34%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#FFFFFF', padding: '3px 8px', borderRadius: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#2563EB', boxShadow: '0 0 0 3px rgba(37,99,235,0.3)' }} />
-            <span style={{ fontSize: '11px', fontWeight: 700, color: '#0F172A' }}>Guwahati</span>
-          </div>
-        </div>
-
-        {/* Other City Nodes */}
-        <div style={{ position: 'absolute', top: '47%', left: '42%', color: '#FFFFFF', fontSize: '11px', fontWeight: 700, textShadow: '0 1px 3px #000' }}>Shillong</div>
-        <div style={{ position: 'absolute', top: '35%', left: '59%', color: '#FFFFFF', fontSize: '11px', fontWeight: 700, textShadow: '0 1px 3px #000' }}>Nagaon</div>
-        <div style={{ position: 'absolute', top: '38%', left: '76%', color: '#FFFFFF', fontSize: '11px', fontWeight: 700, textShadow: '0 1px 3px #000' }}>Dimapur</div>
-        <div style={{ position: 'absolute', top: '20%', left: '74%', color: '#FFFFFF', fontSize: '11px', fontWeight: 700, textShadow: '0 1px 3px #000' }}>Itanagar</div>
-        <div style={{ position: 'absolute', top: '60%', left: '55%', color: '#FFFFFF', fontSize: '11px', fontWeight: 700, textShadow: '0 1px 3px #000' }}>Aizawl</div>
-        <div style={{ position: 'absolute', top: '51%', left: '54%', color: '#FFFFFF', fontSize: '11px', fontWeight: 700, textShadow: '0 1px 3px #000' }}>Silchar</div>
-
-        {/* Blocked Road Badges on Map */}
-        <div style={{ position: 'absolute', top: '34%', left: '67%', transform: 'translate(-50%, -50%)', zIndex: 12 }}>
-          <div style={{ width: '18px', height: '18px', borderRadius: '50%', backgroundColor: '#EF4444', border: '2px solid #FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.4)', color: '#fff', fontSize: '10px', fontWeight: 'bold' }}>
-            ⊖
-          </div>
-        </div>
-        <div style={{ position: 'absolute', top: '47%', left: '60%', transform: 'translate(-50%, -50%)', zIndex: 12 }}>
-          <div style={{ width: '18px', height: '18px', borderRadius: '50%', backgroundColor: '#EF4444', border: '2px solid #FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.4)', color: '#fff', fontSize: '10px', fontWeight: 'bold' }}>
-            ⊖
-          </div>
-        </div>
-
-        {/* Live Active Vehicle Markers on Map */}
-        {layers.vehicles && (
-          <>
-            <div style={{ position: 'absolute', top: '26%', left: '66%', transform: 'translate(-50%, -50%)', zIndex: 12 }}>
-              <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: '#10B981', border: '2px solid #FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.3)', color: '#fff' }}>
-                <Truck size={11} />
-              </div>
-            </div>
-            <div style={{ position: 'absolute', top: '22%', left: '71%', transform: 'translate(-50%, -50%)', zIndex: 12 }}>
-              <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: '#10B981', border: '2px solid #FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.3)', color: '#fff' }}>
-                <Truck size={11} />
-              </div>
-            </div>
-            <div style={{ position: 'absolute', top: '32%', left: '52%', transform: 'translate(-50%, -50%)', zIndex: 12 }}>
-              <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: '#3B82F6', border: '2px solid #FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.3)', color: '#fff' }}>
-                <Truck size={11} />
-              </div>
-            </div>
-            <div style={{ position: 'absolute', top: '51%', left: '64%', transform: 'translate(-50%, -50%)', zIndex: 12 }}>
-              <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: '#3B82F6', border: '2px solid #FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.3)', color: '#fff' }}>
-                <Truck size={11} />
-              </div>
-            </div>
-            <div style={{ position: 'absolute', top: '61%', left: '58%', transform: 'translate(-50%, -50%)', zIndex: 12 }}>
-              <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: '#10B981', border: '2px solid #FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.3)', color: '#fff' }}>
-                <Truck size={11} />
-              </div>
-            </div>
-          </>
-        )}
 
         {/* =====================================================================
             FLOATING LEFT PANELS (Map Layers, Legend, Weather Radar)
@@ -399,7 +643,7 @@ export const LiveMapPage = () => {
                     <span>Landslide</span>
                   </div>
                   <div className="map-legend-row">
-                    <Waves size={12} color="#3B82F6" />
+                    <Waves size={12} color="#2563EB" />
                     <span>Flood</span>
                   </div>
                   <div className="map-legend-row">
@@ -477,126 +721,18 @@ export const LiveMapPage = () => {
           )}
         </div>
 
-        {/* =====================================================================
-            FLOATING INCIDENT ALERT POPUPS ON MAP (4 Reference Cards)
-            ===================================================================== */}
-        {layers.incidents && (
-          <>
-            {/* Popup 1: Landslide Reported */}
-            {visiblePopups.landslide && (
-              <div className="map-incident-popup" style={{ top: '18%', left: '39%' }}>
-                <div className="map-incident-header">
-                  <div className="map-incident-badge" style={{ color: '#EF4444' }}>
-                    <AlertTriangle size={12} color="#EF4444" />
-                    <span>Landslide Reported</span>
-                  </div>
-                  <button onClick={() => closePopup('landslide')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8' }}>
-                    <X size={13} />
-                  </button>
-                </div>
-                <div className="map-incident-title">NH-13A (Jorabat Section)</div>
-                <div className="map-incident-desc">Near Sonapur, Assam</div>
-                <div className="map-incident-time">10:15 AM</div>
-                <img src="/assets/field-reports/landslide.jpg" alt="Landslide" className="map-incident-thumb" />
-              </div>
-            )}
-
-            {/* Popup 2: Flood Alert */}
-            {visiblePopups.flood && (
-              <div className="map-incident-popup" style={{ top: '20%', left: '80%' }}>
-                <div className="map-incident-header">
-                  <div className="map-incident-badge" style={{ color: '#2563EB' }}>
-                    <Waves size={12} color="#2563EB" />
-                    <span>Flood Alert</span>
-                  </div>
-                  <button onClick={() => closePopup('flood')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8' }}>
-                    <X size={13} />
-                  </button>
-                </div>
-                <div className="map-incident-title">NH-27 (Near Badarpur)</div>
-                <div className="map-incident-desc">Assam</div>
-                <div className="map-incident-time">09:45AM</div>
-                <img src="/assets/field-reports/waterlogged.jpg" alt="Flood" className="map-incident-thumb" />
-              </div>
-            )}
-
-            {/* Popup 3: Route Blocked */}
-            {visiblePopups.blocked && (
-              <div className="map-incident-popup" style={{ top: '46%', left: '45%' }}>
-                <div className="map-incident-header">
-                  <div className="map-incident-badge" style={{ color: '#DC2626' }}>
-                    <Ban size={12} color="#DC2626" />
-                    <span>Route Blocked</span>
-                  </div>
-                  <button onClick={() => closePopup('blocked')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8' }}>
-                    <X size={13} />
-                  </button>
-                </div>
-                <div className="map-incident-title">NH-37 (Jiribam)</div>
-                <div className="map-incident-desc">Bridge damaged • Route closed</div>
-                <div className="map-incident-time">08:50 AM</div>
-                <img src="/assets/field-reports/bridge_damage.jpg" alt="Bridge Damage" className="map-incident-thumb" />
-              </div>
-            )}
-
-            {/* Popup 4: Heavy Rainfall */}
-            {visiblePopups.heavyRain && (
-              <div className="map-incident-popup" style={{ top: '46%', left: '70%' }}>
-                <div className="map-incident-header">
-                  <div className="map-incident-badge" style={{ color: '#D97706' }}>
-                    <CloudRain size={12} color="#D97706" />
-                    <span>Heavy Rainfall</span>
-                  </div>
-                  <button onClick={() => closePopup('heavyRain')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8' }}>
-                    <X size={13} />
-                  </button>
-                </div>
-                <div className="map-incident-title">East Khasi Hills</div>
-                <div className="map-incident-desc">Meghalaya</div>
-                <div className="map-incident-time">09:30AM</div>
-                <img src="/assets/field-reports/traffic.jpg" alt="Rainfall" className="map-incident-thumb" />
-              </div>
-            )}
-          </>
-        )}
-
-        {/* =====================================================================
-            FLOATING CONTROLS ON RIGHT (Compass, Zoom, Location, Layers, Fullscreen)
-            ===================================================================== */}
-        <div className="map-floating-controls-right">
-          {/* Compass with Red Pointer */}
-          <button className="map-ctrl-btn" title="Compass (North)" onClick={() => setZoomLevel(1)}>
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Compass size={18} color="#059669" />
-              <span style={{ position: 'absolute', top: '-6px', fontSize: '9px', fontWeight: 800, color: '#EF4444' }}>N</span>
-            </div>
-          </button>
-        </div>
-
-        <div className="map-floating-controls-bottom-right">
-          {/* Zoom In */}
-          <button className="map-ctrl-btn" title="Zoom In" onClick={() => setZoomLevel((z) => Math.min(z + 0.25, 2.5))}>
-            <Plus size={16} />
-          </button>
-
-          {/* Zoom Out */}
-          <button className="map-ctrl-btn" title="Zoom Out" onClick={() => setZoomLevel((z) => Math.max(z - 0.25, 0.75))}>
-            <Minus size={16} />
-          </button>
-
-          {/* Current Location */}
-          <button className="map-ctrl-btn" title="Center on Guwahati Hub" onClick={() => { setZoomLevel(1); toast.info('Centered on Regional Logistics Hub (Guwahati)'); }}>
+        {/* Location Reset Button */}
+        <div style={{ position: 'absolute', top: '16px', right: '60px', zIndex: 1000 }}>
+          <button
+            className="map-ctrl-btn"
+            title="Center on Guwahati Logistics Hub"
+            onClick={() => {
+              setMapCenter([26.1445, 91.7362]);
+              setMapZoom(9);
+              toast.info('Centered on Regional Logistics Hub (Guwahati)');
+            }}
+          >
             <Navigation size={15} color="#2563EB" />
-          </button>
-
-          {/* Map Layer Switcher */}
-          <button className="map-ctrl-btn" title="Toggle Layers" onClick={() => setLayersOpen(!layersOpen)}>
-            <Layers size={15} color="#059669" />
-          </button>
-
-          {/* Fullscreen Toggle */}
-          <button className="map-ctrl-btn" title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen Map'} onClick={() => setIsFullscreen(!isFullscreen)}>
-            {isFullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
           </button>
         </div>
       </div>
