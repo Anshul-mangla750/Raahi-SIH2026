@@ -1370,3 +1370,30 @@
     opacity: 1;
   }
 }
+
+/* Emergency Page Responsive Styles */
+@media (max-width: 1024px) {
+  .emergency-route-impact-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .alternate-routes-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .emergency-header-row {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .emergency-overview-card > div {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .alternate-routes-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

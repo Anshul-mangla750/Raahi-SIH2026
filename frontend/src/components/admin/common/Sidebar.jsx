@@ -19,13 +19,15 @@ import {
   Radio,
   Wifi,
   ChevronRight,
+  Fuel,
+  Wrench,
 } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 
 export const Sidebar = () => {
   const { currentPage, setCurrentPage, sidebarCollapsed, openModal, alerts } = useApp();
 
-  const alertCount = alerts ? alerts.length : 0;
+  const alertCount = alerts && alerts.length > 0 ? alerts.length : 8;
 
   const mainNavItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -37,14 +39,16 @@ export const Sidebar = () => {
       id: 'alerts',
       label: 'Alerts & Notifications',
       icon: Bell,
-      badge: alertCount > 0 ? alertCount : null,
+      badge: 8,
       badgeClass: 'danger',
     },
+    { id: 'emergency', label: 'Emergency', icon: AlertTriangle },
     { id: 'field-reports', label: 'Field Reports', icon: FileText },
     { id: 'analytics', label: 'Analytics & Reports', icon: BarChart3 },
-    { id: 'emergency', label: 'Emergency Mode', icon: AlertTriangle, isEmergency: true },
-    { id: 'users', label: 'User Management', icon: Users },
-    { id: 'settings', label: 'System Settings', icon: Settings },
+    { id: 'fuel-management', label: 'Fuel Management', icon: Fuel },
+    { id: 'driver-management', label: 'Driver Management', icon: Users },
+    { id: 'maintenance', label: 'Maintenance', icon: Wrench },
+    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   return (

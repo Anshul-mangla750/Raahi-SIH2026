@@ -17,8 +17,8 @@ function AdminContent() {
             <Outlet />
           </main>
           <footer className="app-footer">
-            <span>© 2026 RAAHI / NER LogiSmart Admin. All rights reserved.</span>
-            <span>Version 2.4.1 • Government of India Initiative</span>
+            <span>© 2025 RAAHI. All rights reserved.</span>
+            <span>Version 2.4.1</span>
           </footer>
         </div>
       </div>

@@ -11,9 +11,12 @@ const pageToPath = {
   'route-optimization': '/admin/route-optimization',
   'vehicle-tracking': '/admin/vehicle-tracking',
   'alerts': '/admin/alerts',
+  'emergency': '/admin/emergency',
   'field-reports': '/admin/field-reports',
   'analytics': '/admin/analytics',
-  'emergency': '/admin/emergency',
+  'fuel-management': '/admin/analytics',
+  'driver-management': '/admin/users',
+  'maintenance': '/admin/vehicle-tracking',
   'users': '/admin/users',
   'settings': '/admin/settings',
 };
