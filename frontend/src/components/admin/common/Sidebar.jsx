@@ -21,6 +21,7 @@ import {
   ChevronRight,
   Fuel,
   Wrench,
+  Network,
 } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 
@@ -47,7 +48,7 @@ export const Sidebar = () => {
     { id: 'analytics', label: 'Analytics & Reports', icon: BarChart3 },
     { id: 'fuel-management', label: 'Fuel Management', icon: Fuel },
     { id: 'driver-management', label: 'Driver Management', icon: Users },
-    { id: 'maintenance', label: 'Maintenance', icon: Wrench },
+    { id: 'district-management', label: 'District Management', icon: Network },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 

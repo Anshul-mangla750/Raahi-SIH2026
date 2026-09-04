@@ -1396,4 +1396,27 @@
   .alternate-routes-grid {
     grid-template-columns: 1fr !important;
   }
-}
+}
+
+/* District Management Page Responsive Styles */
+@media (max-width: 1024px) {
+  .district-connectivity-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .district-kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .district-header-row {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .district-kpi-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+

@@ -16,6 +16,7 @@ const pageToPath = {
   'analytics': '/admin/analytics',
   'fuel-management': '/admin/analytics',
   'driver-management': '/admin/users',
+  'district-management': '/admin/district-management',
   'maintenance': '/admin/vehicle-tracking',
   'users': '/admin/users',
   'settings': '/admin/settings',
@@ -33,6 +34,7 @@ const pathToPage = {
   '/admin/field-reports': 'field-reports',
   '/admin/analytics': 'analytics',
   '/admin/emergency': 'emergency',
+  '/admin/district-management': 'district-management',
   '/admin/users': 'users',
   '/admin/settings': 'settings',
 };
