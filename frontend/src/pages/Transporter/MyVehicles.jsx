@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, Plus, ChevronDown, Check, X, RotateCcw } from 'lucide-react';
+import { Filter, Plus, ChevronDown, Check, X, RotateCcw, UserPlus } from 'lucide-react';
 import TransporterSidebar from '../../components/transporter/TransporterSidebar';
 import TransporterHeader from '../../components/transporter/TransporterHeader';
 import VehiclesKPIs from '../../components/vehicles/VehiclesKPIs';
@@ -8,6 +8,7 @@ import VehiclesSearchBar from '../../components/vehicles/VehiclesSearchBar';
 import VehicleRow from '../../components/vehicles/VehicleRow';
 import VehiclesPagination from '../../components/vehicles/VehiclesPagination';
 import AddVehicleModal from '../../components/vehicles/AddVehicleModal';
+import AddDriverModal from '../../components/vehicles/AddDriverModal';
 import VehicleDetailsModal from '../../components/vehicles/VehicleDetailsModal';
 import { vehiclesListData } from '../../data/vehiclesData';
 import ApiClient from '../../lib/api';
@@ -23,6 +24,7 @@ export default function MyVehicles() {
 
   // Modals state
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showAddDriverModal, setShowAddDriverModal] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
 
   // Dynamic Pagination states
@@ -200,6 +202,16 @@ export default function MyVehicles() {
                 )}
               </div>
 
+              {/* Add Driver Button */}
+              <button
+                type="button"
+                onClick={() => setShowAddDriverModal(true)}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg shadow-sm transition-colors cursor-pointer"
+              >
+                <UserPlus size={16} className="text-emerald-600" />
+                <span>Add Driver</span>
+              </button>
+
               {/* Add Vehicle Button */}
               <button
                 type="button"
@@ -261,6 +273,12 @@ export default function MyVehicles() {
           </div>
         </main>
       </div>
+
+      {/* Add Driver Modal */}
+      <AddDriverModal
+        isOpen={showAddDriverModal}
+        onClose={() => setShowAddDriverModal(false)}
+      />
 
       {/* Add Vehicle Modal */}
       <AddVehicleModal

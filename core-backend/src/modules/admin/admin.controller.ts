@@ -10,7 +10,7 @@ import {
   Delivery,
   User,
 } from '../../models/postgres';
-import { FieldReport, Alert, AuditLog } from '../../models/mongo';
+import { FieldReport, Alert, AuditLog, MongoUser } from '../../models/mongo';
 import { sendSuccess, sendError } from '../../utils/response';
 import bcrypt from 'bcrypt';
 
@@ -358,13 +358,31 @@ export class AdminController {
     }
   }
 
-  // 10. User Management CRUD
+  // 10. User Management CRUD (MongoDB Single Source of Truth)
   static async getUsers(req: Request, res: Response) {
     try {
-      const users = await User.findAll({
-        attributes: { exclude: ['password_hash'] },
-      });
-      return sendSuccess(res, users, 'User directory retrieved');
+      const mongoUsers = await MongoUser.find({}, '-password').sort({ createdAt: -1 });
+      
+      const formatted = mongoUsers.map((u) => ({
+        id: u._id.toString(),
+        customId: u.customId || u._id.toString(),
+        name: u.name,
+        email: u.email,
+        role: u.role,
+        phone: u.phone,
+        status: u.status || 'active',
+        assignedDistrict: u.assignedDistrict,
+        agency: u.agency,
+        companyName: u.companyName || u.company,
+        company: u.company || u.companyName,
+        transporterId: u.transporterId,
+        licenseNo: u.licenseNo,
+        vehicleNo: u.vehicleNo,
+        vehicleType: u.vehicleType,
+        createdAt: u.createdAt,
+      }));
+
+      return sendSuccess(res, formatted, 'User directory retrieved');
     } catch (err: any) {
       return sendError(res, err.message);
     }
@@ -372,22 +390,88 @@ export class AdminController {
 
   static async createUser(req: Request, res: Response) {
     try {
-      const { name, email, password, role, district_id, transporter_id, agency, phone } = req.body;
-      const password_hash = await bcrypt.hash(password || 'raahi2026', 12);
-      const user = await User.create({
+      const {
         name,
+        customId,
         email,
-        password_hash,
-        role: role || 'viewer',
+        password,
+        role,
+        assignedDistrict,
         district_id,
-        transporter_id,
         agency,
+        companyName,
+        company,
         phone,
+        licenseNo,
+        vehicleNo,
+        vehicleType,
+      } = req.body;
+
+      if (!name || !email) {
+        return sendError(res, 'Name and Email are required', 400);
+      }
+
+      const normalizedEmail = String(email).toLowerCase().trim();
+      const existing = await MongoUser.findOne({
+        $or: [
+          { email: normalizedEmail },
+          ...(customId ? [{ customId: String(customId).trim() }] : []),
+        ],
       });
 
+      if (existing) {
+        return sendError(res, 'A user with this email or custom ID already exists', 409);
+      }
+
+      // Normalize role to 5 roles
+      let normalizedRole: 'admin' | 'transporter' | 'field_officer' | 'driver' | 'user' = 'user';
+      const roleStr = String(role || '').toLowerCase();
+      if (roleStr === 'admin') normalizedRole = 'admin';
+      else if (roleStr === 'transporter') normalizedRole = 'transporter';
+      else if (roleStr === 'field_officer' || roleStr === 'field_worker' || roleStr === 'district_officer' || roleStr === 'field_agent') {
+        normalizedRole = 'field_officer';
+      } else if (roleStr === 'driver') normalizedRole = 'driver';
+
+      const user = new MongoUser({
+        name: name.trim(),
+        customId: customId ? String(customId).trim() : undefined,
+        email: normalizedEmail,
+        password: password || 'raahi2026', // Pre-save hook hashes with bcrypt
+        role: normalizedRole,
+        phone: phone ? String(phone).trim() : undefined,
+        status: 'active',
+        assignedDistrict: assignedDistrict || district_id || undefined,
+        agency: agency || undefined,
+        company: company || companyName || undefined,
+        companyName: companyName || company || undefined,
+        licenseNo: licenseNo || undefined,
+        vehicleNo: vehicleNo || undefined,
+        vehicleType: vehicleType || undefined,
+      });
+
+      await user.save();
+
+      // Optionally sync to Postgres User for relational compatibility
+      try {
+        const password_hash = await bcrypt.hash(password || 'raahi2026', 12);
+        const pgRole = normalizedRole === 'field_officer' ? 'field_agent' : normalizedRole === 'user' ? 'viewer' : normalizedRole;
+        await User.create({
+          id: user.customId || user._id.toString(),
+          name: user.name,
+          email: user.email,
+          password_hash,
+          role: pgRole as any,
+          district_id: user.assignedDistrict || null,
+          transporter_id: null,
+          agency: user.agency || user.company || null,
+          phone: user.phone || null,
+        });
+      } catch (pgErr) {
+        // Ignored if Postgres constraint fails or already exists
+      }
+
       const json = user.toJSON();
-      delete (json as any).password_hash;
-      return sendSuccess(res, json, 'User created successfully', 201);
+      return sendSuccess(res, json, 'Personnel created successfully', 201);
     } catch (err: any) {
       return sendError(res, err.message);
     }
@@ -395,24 +479,27 @@ export class AdminController {
 
   static async updateUser(req: Request, res: Response) {
     try {
-      const user = await User.findByPk(String(req.params.id));
+      const user = await MongoUser.findById(req.params.id);
       if (!user) return sendError(res, 'User not found', 404);
 
-      const { name, role, district_id, transporter_id, agency, phone, password } = req.body;
+      const { name, role, assignedDistrict, agency, companyName, phone, password, status } = req.body;
       if (password) {
-        user.password_hash = await bcrypt.hash(password, 12);
+        user.password = password; // Will be hashed by pre-save
       }
       if (name) user.name = name;
       if (role) user.role = role;
-      if (district_id !== undefined) user.district_id = district_id;
-      if (transporter_id !== undefined) user.transporter_id = transporter_id;
+      if (assignedDistrict !== undefined) user.assignedDistrict = assignedDistrict;
       if (agency !== undefined) user.agency = agency;
+      if (companyName !== undefined) {
+        user.companyName = companyName;
+        user.company = companyName;
+      }
       if (phone !== undefined) user.phone = phone;
+      if (status !== undefined) user.status = status;
 
       await user.save();
 
       const json = user.toJSON();
-      delete (json as any).password_hash;
       return sendSuccess(res, json, 'User updated successfully');
     } catch (err: any) {
       return sendError(res, err.message);
@@ -421,8 +508,17 @@ export class AdminController {
 
   static async deleteUser(req: Request, res: Response) {
     try {
-      const count = await User.destroy({ where: { id: req.params.id } });
-      if (!count) return sendError(res, 'User not found', 404);
+      const id = req.params.id;
+      const deleted = await MongoUser.findOneAndDelete({
+        $or: [{ _id: id }, { customId: id }],
+      });
+
+      // Also clean up Postgres User if exists
+      try {
+        await User.destroy({ where: { [require('sequelize').Op.or]: [{ id }, { email: deleted?.email || '' }] } });
+      } catch (e) {}
+
+      if (!deleted) return sendError(res, 'User not found', 404);
       return sendSuccess(res, null, 'User deleted successfully');
     } catch (err: any) {
       return sendError(res, err.message);

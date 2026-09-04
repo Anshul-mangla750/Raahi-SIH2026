@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import AdminDashboardApp from './pages/admin/AdminDashboardApp';
 import TransporterApp from './pages/Transporter/TransporterApp';
+import FieldOfficerDashboardApp from './pages/officer/FieldOfficerDashboardApp';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 export default function App() {
@@ -29,7 +30,7 @@ export default function App() {
               <Route
                 path="/admin/*"
                 element={
-                  <ProtectedRoute allowedRoles={['official', 'admin', 'district_officer']}>
+                  <ProtectedRoute allowedRoles={['admin']}>
                     <AdminDashboardApp />
                   </ProtectedRoute>
                 }
@@ -39,8 +40,18 @@ export default function App() {
               <Route
                 path="/transporter/*"
                 element={
-                  <ProtectedRoute allowedRoles={['operator', 'transporter', 'driver', 'admin', 'official']}>
+                  <ProtectedRoute allowedRoles={['transporter', 'driver', 'admin']}>
                     <TransporterApp />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* JWT Protected Field Officer Portal Routes */}
+              <Route
+                path="/officer/*"
+                element={
+                  <ProtectedRoute allowedRoles={['field_officer', 'field_worker', 'district_officer', 'admin']}>
+                    <FieldOfficerDashboardApp />
                   </ProtectedRoute>
                 }
               />

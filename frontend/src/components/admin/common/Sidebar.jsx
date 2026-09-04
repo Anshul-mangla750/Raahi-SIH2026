@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   LayoutDashboard,
   MapPin,
@@ -18,6 +17,7 @@ import {
   Radio,
   Wifi,
   ChevronRight,
+  Users,
 } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 
@@ -41,6 +41,7 @@ export const Sidebar = () => {
     },
     { id: 'field-reports', label: 'Field Reports', icon: FileText },
     { id: 'analytics', label: 'Analytics & Reports', icon: BarChart3 },
+    { id: 'personnel', label: 'Personnel & Roles', icon: Users },
     { id: 'emergency', label: 'Emergency Mode', icon: AlertTriangle, isEmergency: true },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];

@@ -33,11 +33,17 @@ export const ProtectedRoute = ({ children, allowedRoles = [] }) => {
 
     if (!hasAccess) {
       // Smart redirect based on actual user role
-      if (userRole === 'official' || backendRole === 'admin' || backendRole === 'district_officer') {
+      if (userRole === 'admin' || backendRole === 'admin') {
         return <Navigate to="/admin" replace />;
       }
-      if (userRole === 'operator' || backendRole === 'transporter' || backendRole === 'driver') {
+      if (userRole === 'transporter' || backendRole === 'transporter') {
         return <Navigate to="/transporter/dashboard" replace />;
+      }
+      if (userRole === 'field_officer' || backendRole === 'field_officer' || backendRole === 'field_worker' || backendRole === 'district_officer') {
+        return <Navigate to="/officer/dashboard" replace />;
+      }
+      if (userRole === 'driver' || backendRole === 'driver') {
+        return <Navigate to="/transporter/consignments" replace />;
       }
       return <Navigate to="/login" replace />;
     }

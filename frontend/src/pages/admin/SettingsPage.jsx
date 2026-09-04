@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { WEATHER_DATA } from '@/data/admin/mockData';
+import { UserManagementPage } from './UserManagementPage';
 
 export const SettingsPage = () => {
   const { addToast } = useApp();
@@ -251,58 +252,7 @@ export const SettingsPage = () => {
 
       {/* User Management Tab */}
       {activeTab === 'user-management' && (
-        <div className="card">
-          <div className="card-header">
-            <h3 style={{ fontSize: '16px', fontWeight: 600 }}>Active Personnel & Roles</h3>
-            <button className="btn btn-primary" onClick={() => handleSave('User Invite')}>
-              + Invite Team Member
-            </button>
-          </div>
-
-          <div className="table-container">
-            <table className="custom-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Role</th>
-                  <th>Assigned Region</th>
-                  <th>Status</th>
-                  <th>Last Active</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style={{ fontWeight: 600 }}>Admin User (You)</td>
-                  <td><span className="badge badge-high">Government Administrator</span></td>
-                  <td>All North Eastern States</td>
-                  <td><span className="badge badge-resolved">Active</span></td>
-                  <td>Just now</td>
-                </tr>
-                <tr>
-                  <td style={{ fontWeight: 600 }}>Rakesh Das</td>
-                  <td><span className="badge badge-low">Senior Fleet Driver</span></td>
-                  <td>Assam - NH-27 Corridor</td>
-                  <td><span className="badge badge-resolved">Active</span></td>
-                  <td>10 mins ago</td>
-                </tr>
-                <tr>
-                  <td style={{ fontWeight: 600 }}>Debashish Sharma</td>
-                  <td><span className="badge badge-medium">Regional Dispatcher</span></td>
-                  <td>Guwahati Hub Hub 1</td>
-                  <td><span className="badge badge-resolved">Active</span></td>
-                  <td>1 hour ago</td>
-                </tr>
-                <tr>
-                  <td style={{ fontWeight: 600 }}>Bikash Borah</td>
-                  <td><span className="badge badge-low">Driver Logistics</span></td>
-                  <td>Meghalaya Hills</td>
-                  <td><span className="badge badge-pending">On Route</span></td>
-                  <td>2 hours ago</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <UserManagementPage />
       )}
 
       {/* Notifications Tab */}

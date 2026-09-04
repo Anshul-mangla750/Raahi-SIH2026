@@ -1,54 +1,94 @@
 import { z } from 'zod';
 export declare const registerSchema: z.ZodObject<{
     body: z.ZodObject<{
+        customId: z.ZodOptional<z.ZodString>;
         name: z.ZodString;
         email: z.ZodString;
         password: z.ZodString;
-        role: z.ZodEnum<["admin", "district_officer", "field_agent", "transporter", "driver", "viewer"]>;
+        role: z.ZodEnum<["admin", "transporter", "field_officer", "field_worker", "driver", "user"]>;
+        assignedDistrict: z.ZodOptional<z.ZodString>;
         district_id: z.ZodOptional<z.ZodString>;
-        transporter_id: z.ZodOptional<z.ZodString>;
         agency: z.ZodOptional<z.ZodString>;
+        company: z.ZodOptional<z.ZodString>;
+        companyName: z.ZodOptional<z.ZodString>;
+        transporterId: z.ZodOptional<z.ZodString>;
+        transporter_id: z.ZodOptional<z.ZodString>;
         phone: z.ZodOptional<z.ZodString>;
+        licenseNo: z.ZodOptional<z.ZodString>;
+        vehicleNo: z.ZodOptional<z.ZodString>;
+        vehicleType: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         name: string;
         email: string;
-        role: "admin" | "district_officer" | "field_agent" | "transporter" | "driver" | "viewer";
         password: string;
+        role: "admin" | "transporter" | "field_officer" | "driver" | "user" | "field_worker";
+        customId?: string | undefined;
+        phone?: string | undefined;
+        assignedDistrict?: string | undefined;
+        agency?: string | undefined;
+        company?: string | undefined;
+        companyName?: string | undefined;
+        transporterId?: string | undefined;
+        licenseNo?: string | undefined;
+        vehicleNo?: string | undefined;
+        vehicleType?: string | undefined;
         district_id?: string | undefined;
         transporter_id?: string | undefined;
-        agency?: string | undefined;
-        phone?: string | undefined;
     }, {
         name: string;
         email: string;
-        role: "admin" | "district_officer" | "field_agent" | "transporter" | "driver" | "viewer";
         password: string;
+        role: "admin" | "transporter" | "field_officer" | "driver" | "user" | "field_worker";
+        customId?: string | undefined;
+        phone?: string | undefined;
+        assignedDistrict?: string | undefined;
+        agency?: string | undefined;
+        company?: string | undefined;
+        companyName?: string | undefined;
+        transporterId?: string | undefined;
+        licenseNo?: string | undefined;
+        vehicleNo?: string | undefined;
+        vehicleType?: string | undefined;
         district_id?: string | undefined;
         transporter_id?: string | undefined;
-        agency?: string | undefined;
-        phone?: string | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     body: {
         name: string;
         email: string;
-        role: "admin" | "district_officer" | "field_agent" | "transporter" | "driver" | "viewer";
         password: string;
+        role: "admin" | "transporter" | "field_officer" | "driver" | "user" | "field_worker";
+        customId?: string | undefined;
+        phone?: string | undefined;
+        assignedDistrict?: string | undefined;
+        agency?: string | undefined;
+        company?: string | undefined;
+        companyName?: string | undefined;
+        transporterId?: string | undefined;
+        licenseNo?: string | undefined;
+        vehicleNo?: string | undefined;
+        vehicleType?: string | undefined;
         district_id?: string | undefined;
         transporter_id?: string | undefined;
-        agency?: string | undefined;
-        phone?: string | undefined;
     };
 }, {
     body: {
         name: string;
         email: string;
-        role: "admin" | "district_officer" | "field_agent" | "transporter" | "driver" | "viewer";
         password: string;
+        role: "admin" | "transporter" | "field_officer" | "driver" | "user" | "field_worker";
+        customId?: string | undefined;
+        phone?: string | undefined;
+        assignedDistrict?: string | undefined;
+        agency?: string | undefined;
+        company?: string | undefined;
+        companyName?: string | undefined;
+        transporterId?: string | undefined;
+        licenseNo?: string | undefined;
+        vehicleNo?: string | undefined;
+        vehicleType?: string | undefined;
         district_id?: string | undefined;
         transporter_id?: string | undefined;
-        agency?: string | undefined;
-        phone?: string | undefined;
     };
 }>;
 export declare const loginSchema: z.ZodObject<{

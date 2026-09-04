@@ -18,4 +18,5 @@ __exportStar(require("./FieldReport"), exports);
 __exportStar(require("./Alert"), exports);
 __exportStar(require("./AuditLog"), exports);
 __exportStar(require("./NotificationsLog"), exports);
+__exportStar(require("./User"), exports);
 //# sourceMappingURL=index.js.map

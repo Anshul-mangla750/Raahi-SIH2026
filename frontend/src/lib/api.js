@@ -146,6 +146,24 @@ class ApiClient {
     return this.request('/admin/users');
   }
 
+  static createAdminUser(payload) {
+    return this.request('/admin/users', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  static updateAdminUser(id, payload) {
+    return this.request(`/admin/users/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  static deleteAdminUser(id) {
+    return this.request(`/admin/users/${id}`, { method: 'DELETE' });
+  }
+
   // Transporter endpoints
   static getTransporterKpis() {
     return this.request('/transporter/overview/kpis');
@@ -157,6 +175,17 @@ class ApiClient {
 
   static getTransporterDrivers() {
     return this.request('/transporter/drivers');
+  }
+
+  static createTransporterDriver(payload) {
+    return this.request('/transporter/drivers', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  static deleteTransporterDriver(id) {
+    return this.request(`/transporter/drivers/${id}`, { method: 'DELETE' });
   }
 
   static getTransporterDeliveries() {

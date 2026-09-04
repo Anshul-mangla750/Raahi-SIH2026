@@ -6,7 +6,7 @@ import {
   Delivery,
   Route,
 } from '../../models/postgres';
-import { Alert, FieldReport } from '../../models/mongo';
+import { Alert, FieldReport, MongoUser } from '../../models/mongo';
 import { sendSuccess, sendError } from '../../utils/response';
 
 export class TransporterController {
@@ -185,15 +185,43 @@ export class TransporterController {
     }
   }
 
-  // 4. Drivers CRUD (Transporter Scoped)
+  // 4. Drivers CRUD (Transporter Scoped + MongoDB Single Source of Truth)
   static async getDrivers(req: Request, res: Response) {
     try {
       const transporterId = req.user?.transporterId || 'transporter_01';
-      const drivers = await Driver.findAll({
-        where: { transporter_id: transporterId },
-        include: [{ model: Vehicle, as: 'vehicle' }],
-      });
-      return sendSuccess(res, drivers, 'Drivers retrieved');
+      
+      // Query MongoDB drivers
+      const mongoDrivers = await MongoUser.find({
+        role: 'driver',
+        $or: [
+          { transporterId },
+          { transporterId: { $exists: false } },
+          { transporterId: null },
+          { transporterId: '' },
+        ],
+      }, '-password').sort({ createdAt: -1 });
+
+      const formatted = mongoDrivers.map((d) => ({
+        id: d.customId || d._id.toString(),
+        mongoId: d._id.toString(),
+        customId: d.customId || d._id.toString(),
+        name: d.name,
+        email: d.email,
+        phone: d.phone,
+        license_no: d.licenseNo,
+        licenseNo: d.licenseNo,
+        vehicle_no: d.vehicleNo,
+        vehicleNo: d.vehicleNo,
+        vehicle_type: d.vehicleType,
+        vehicleType: d.vehicleType,
+        safety_score: d.safetyScore || 95,
+        trips_completed: d.tripsCompleted || 0,
+        status: d.status || 'active',
+        company: d.company || d.companyName,
+        created_at: d.createdAt,
+      }));
+
+      return sendSuccess(res, formatted, 'Drivers retrieved');
     } catch (err: any) {
       return sendError(res, err.message);
     }
@@ -202,13 +230,97 @@ export class TransporterController {
   static async createDriver(req: Request, res: Response) {
     try {
       const transporterId = req.user?.transporterId || 'transporter_01';
-      const id = `DRV-${Date.now().toString().slice(-4)}`;
-      const driver = await Driver.create({
-        id,
-        ...req.body,
-        transporter_id: transporterId,
+      const company = req.user?.company || 'Brahmaputra Heavy Freight Logistics';
+      const {
+        name,
+        customId,
+        email,
+        phone,
+        password,
+        license_no,
+        licenseNo,
+        vehicle_no,
+        vehicleNo,
+        vehicle_type,
+        vehicleType,
+      } = req.body;
+
+      if (!name) {
+        return sendError(res, 'Driver name is required', 400);
+      }
+
+      const generatedId = customId ? String(customId).trim() : `DRV-${Date.now().toString().slice(-5)}`;
+      const rawPassword = password || 'driver123';
+      const driverEmail = (email && String(email).trim()) ? String(email).trim().toLowerCase() : `${generatedId.toLowerCase()}@raahi.driver`;
+
+      // Check if driver already exists in MongoDB
+      const existing = await MongoUser.findOne({
+        $or: [
+          { email: driverEmail },
+          { customId: generatedId },
+        ],
       });
-      return sendSuccess(res, driver, 'Driver onboarded', 201);
+
+      if (existing) {
+        return sendError(res, 'A driver with this ID or email already exists', 409);
+      }
+
+      const license = licenseNo || license_no || 'AR01-COMMERCIAL';
+      const vehicle = vehicleNo || vehicle_no || 'AS-01-COMM-001';
+      const vType = vehicleType || vehicle_type || 'Truck';
+
+      // 1. Create in MongoDB User collection
+      const mongoDriver = new MongoUser({
+        name: String(name).trim(),
+        customId: generatedId,
+        email: driverEmail,
+        password: rawPassword, // Pre-save hook hashes with bcrypt
+        role: 'driver',
+        phone: phone ? String(phone).trim() : '+91 98765 00000',
+        status: 'active',
+        transporterId,
+        company,
+        companyName: company,
+        licenseNo: license,
+        vehicleNo: vehicle,
+        vehicleType: vType,
+        safetyScore: 98.0,
+        tripsCompleted: 0,
+      });
+
+      await mongoDriver.save();
+
+      // 2. Also register in Postgres Driver for relational trip planning
+      try {
+        await Driver.create({
+          id: generatedId,
+          name: mongoDriver.name,
+          phone: mongoDriver.phone,
+          license_no: license,
+          transporter_id: transporterId,
+          safety_score: 98.0,
+          trips_completed: 0,
+          status: 'active',
+        });
+      } catch (pgErr) {}
+
+      const responsePayload = {
+        id: generatedId,
+        customId: generatedId,
+        mongoId: mongoDriver._id.toString(),
+        name: mongoDriver.name,
+        email: mongoDriver.email,
+        phone: mongoDriver.phone,
+        licenseNo: license,
+        vehicleNo: vehicle,
+        vehicleType: vType,
+        initialPassword: rawPassword,
+        role: 'driver',
+        transporterId,
+        company,
+      };
+
+      return sendSuccess(res, responsePayload, 'Driver onboarded successfully', 201);
     } catch (err: any) {
       return sendError(res, err.message);
     }
@@ -217,13 +329,36 @@ export class TransporterController {
   static async updateDriver(req: Request, res: Response) {
     try {
       const transporterId = req.user?.transporterId || 'transporter_01';
-      const driver = await Driver.findOne({
-        where: { id: req.params.id, transporter_id: transporterId },
-      });
-      if (!driver) return sendError(res, 'Driver not found', 404);
+      const id = req.params.id;
 
-      await driver.update(req.body);
-      return sendSuccess(res, driver, 'Driver updated');
+      // Update in MongoDB
+      const mongoDriver = await MongoUser.findOne({
+        role: 'driver',
+        $or: [{ _id: id }, { customId: id }],
+      });
+
+      if (!mongoDriver) return sendError(res, 'Driver not found', 404);
+
+      const { name, phone, licenseNo, license_no, vehicleNo, vehicle_no, vehicleType, vehicle_type, password, status } = req.body;
+      if (name) mongoDriver.name = name;
+      if (phone) mongoDriver.phone = phone;
+      if (licenseNo || license_no) mongoDriver.licenseNo = licenseNo || license_no;
+      if (vehicleNo || vehicle_no) mongoDriver.vehicleNo = vehicleNo || vehicle_no;
+      if (vehicleType || vehicle_type) mongoDriver.vehicleType = vehicleType || vehicle_type;
+      if (password) mongoDriver.password = password;
+      if (status) mongoDriver.status = status;
+
+      await mongoDriver.save();
+
+      // Update in Postgres
+      try {
+        await Driver.update(
+          { name: mongoDriver.name, phone: mongoDriver.phone, license_no: mongoDriver.licenseNo },
+          { where: { id } }
+        );
+      } catch (e) {}
+
+      return sendSuccess(res, mongoDriver.toJSON(), 'Driver updated');
     } catch (err: any) {
       return sendError(res, err.message);
     }
@@ -232,10 +367,18 @@ export class TransporterController {
   static async deleteDriver(req: Request, res: Response) {
     try {
       const transporterId = req.user?.transporterId || 'transporter_01';
-      const count = await Driver.destroy({
-        where: { id: req.params.id, transporter_id: transporterId },
+      const id = req.params.id;
+
+      const deleted = await MongoUser.findOneAndDelete({
+        role: 'driver',
+        $or: [{ _id: id }, { customId: id }],
       });
-      if (!count) return sendError(res, 'Driver not found', 404);
+
+      try {
+        await Driver.destroy({ where: { id } });
+      } catch (e) {}
+
+      if (!deleted) return sendError(res, 'Driver not found', 404);
       return sendSuccess(res, null, 'Driver removed');
     } catch (err: any) {
       return sendError(res, err.message);

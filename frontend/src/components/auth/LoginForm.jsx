@@ -38,10 +38,14 @@ export default function LoginForm() {
       const backendRole = result.user?.backendRole;
       const role = result.user?.role;
       
-      if (backendRole === 'admin' || backendRole === 'district_officer' || role === 'official') {
+      if (backendRole === 'admin' || role === 'admin') {
         navigate('/admin', { replace: true });
-      } else if (backendRole === 'transporter' || backendRole === 'driver' || role === 'operator') {
+      } else if (backendRole === 'transporter' || role === 'transporter') {
         navigate('/transporter/dashboard', { replace: true });
+      } else if (backendRole === 'field_officer' || backendRole === 'field_worker' || role === 'field_officer') {
+        navigate('/officer/dashboard', { replace: true });
+      } else if (backendRole === 'driver' || role === 'driver') {
+        navigate('/transporter/consignments', { replace: true });
       } else {
         navigate('/home', { replace: true });
       }
@@ -96,10 +100,10 @@ export default function LoginForm() {
 
       {/* Form Elements */}
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Email or Phone Input */}
+        {/* Email, Phone or User ID Input */}
         <div>
           <label className="block text-xs font-bold text-slate-700 mb-1.5">
-            Email or Phone Number
+            User ID, Email, or Phone Number
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -109,7 +113,7 @@ export default function LoginForm() {
               type="text"
               value={emailOrPhone}
               onChange={(e) => setEmailOrPhone(e.target.value)}
-              placeholder="Enter email or phone number"
+              placeholder="e.g. FO-KAMRUP-01, TR-NER-202, or email"
               className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all shadow-2xs"
               required
             />

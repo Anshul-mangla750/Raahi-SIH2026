@@ -1,19 +1,47 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { User } from '../../models/postgres/User';
+import { MongoUser, IUser, UserRole } from '../../models/mongo/User';
+import { User as PgUser } from '../../models/postgres/User';
 import { env } from '../../config/env';
 import { redisClient } from '../../config/redis';
 import { Op } from 'sequelize';
 
 export class AuthService {
-  static generateTokens(user: User) {
+  static normalizeRole(rawRole: string): UserRole {
+    if (!rawRole) return 'user';
+    const lower = rawRole.toLowerCase();
+    if (lower === 'admin') return 'admin';
+    if (lower === 'transporter') return 'transporter';
+    if (lower === 'field_officer' || lower === 'field_worker' || lower === 'district_officer' || lower === 'field_agent') {
+      return 'field_officer';
+    }
+    if (lower === 'driver') return 'driver';
+    return 'user';
+  }
+
+  static generateTokens(user: {
+    id: string;
+    customId?: string;
+    name: string;
+    email: string;
+    role: string;
+    assignedDistrict?: string | null;
+    transporterId?: string | null;
+    agency?: string | null;
+    company?: string | null;
+    phone?: string | null;
+  }) {
+    const role = this.normalizeRole(user.role);
     const payload = {
       id: user.id,
+      customId: user.customId,
       name: user.name,
       email: user.email,
-      role: user.role,
-      districtId: user.district_id,
-      transporterId: user.transporter_id,
+      role,
+      assignedDistrict: user.assignedDistrict,
+      transporterId: user.transporterId,
+      agency: user.agency,
+      company: user.company,
     };
 
     const accessToken = jwt.sign(payload, env.jwtAccessSecret, {
@@ -30,106 +58,240 @@ export class AuthService {
   }
 
   static async register(data: {
+    customId?: string;
     name: string;
     email: string;
     password: string;
-    role: 'admin' | 'district_officer' | 'field_agent' | 'transporter' | 'driver' | 'viewer';
-    district_id?: string;
-    transporter_id?: string;
+    role: UserRole;
+    assignedDistrict?: string;
+    transporterId?: string;
     agency?: string;
+    companyName?: string;
+    company?: string;
     phone?: string;
+    licenseNo?: string;
+    vehicleNo?: string;
+    vehicleType?: string;
   }) {
-    const existing = await User.findOne({ where: { email: data.email } });
-    if (existing) {
-      throw new Error('User with this email already exists');
-    }
-
-    const password_hash = await bcrypt.hash(data.password, 12);
-
-    const user = await User.create({
-      name: data.name,
-      email: data.email,
-      password_hash,
-      role: data.role,
-      district_id: data.district_id || null,
-      transporter_id: data.transporter_id || null,
-      agency: data.agency || null,
-      phone: data.phone || null,
+    const normalizedEmail = data.email.toLowerCase().trim();
+    const existing = await MongoUser.findOne({
+      $or: [
+        { email: normalizedEmail },
+        ...(data.customId ? [{ customId: data.customId.trim() }] : []),
+      ],
     });
 
-    const tokens = this.generateTokens(user);
-    // Save refresh token to Redis with 7 days TTL (604800s)
-    await redisClient.set(`refresh_token:${user.id}`, tokens.refreshToken, { ex: 604800 });
+    if (existing) {
+      throw new Error('User with this email or ID already exists');
+    }
+
+    const role = this.normalizeRole(data.role);
+
+    const mongoUser = new MongoUser({
+      customId: data.customId ? data.customId.trim() : undefined,
+      name: data.name.trim(),
+      email: normalizedEmail,
+      password: data.password, // Pre-save hook hashes with bcrypt
+      role,
+      phone: data.phone?.trim(),
+      assignedDistrict: data.assignedDistrict,
+      agency: data.agency,
+      company: data.company || data.companyName,
+      companyName: data.companyName || data.company,
+      transporterId: data.transporterId,
+      licenseNo: data.licenseNo,
+      vehicleNo: data.vehicleNo,
+      vehicleType: data.vehicleType,
+    });
+
+    await mongoUser.save();
+
+    const formattedUser = {
+      id: mongoUser._id.toString(),
+      customId: mongoUser.customId,
+      name: mongoUser.name,
+      email: mongoUser.email,
+      role,
+      assignedDistrict: mongoUser.assignedDistrict,
+      transporterId: mongoUser.transporterId,
+      agency: mongoUser.agency,
+      company: mongoUser.company || mongoUser.companyName,
+      phone: mongoUser.phone,
+    };
+
+    const tokens = this.generateTokens(formattedUser);
+
+    try {
+      await redisClient.set(`refresh_token:${formattedUser.id}`, tokens.refreshToken, { ex: 604800 });
+    } catch (e) {
+      // Redis fallback
+    }
 
     return {
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        districtId: user.district_id,
-        transporterId: user.transporter_id,
-        agency: user.agency,
-        phone: user.phone,
-      },
+      user: formattedUser,
       ...tokens,
     };
   }
 
   static async login(identifier: string, password: string) {
-    // Support finding by email or phone
-    const user = await User.findOne({
+    const idTrimmed = identifier.trim();
+    const idLower = idTrimmed.toLowerCase();
+
+    // 1. First check MongoDB (Primary source of truth for both Website & Mobile)
+    let mongoUser = await MongoUser.findOne({
+      $or: [
+        { email: idLower },
+        { phone: idTrimmed },
+        { customId: idTrimmed },
+      ],
+    });
+
+    if (mongoUser) {
+      const isMatch = await mongoUser.comparePassword(password);
+      if (!isMatch) {
+        throw new Error('Invalid credentials');
+      }
+
+      const role = this.normalizeRole(mongoUser.role);
+      const formattedUser = {
+        id: mongoUser._id.toString(),
+        customId: mongoUser.customId,
+        name: mongoUser.name,
+        email: mongoUser.email,
+        role,
+        assignedDistrict: mongoUser.assignedDistrict,
+        transporterId: mongoUser.transporterId,
+        agency: mongoUser.agency,
+        company: mongoUser.company || mongoUser.companyName,
+        phone: mongoUser.phone,
+      };
+
+      const tokens = this.generateTokens(formattedUser);
+      try {
+        await redisClient.set(`refresh_token:${formattedUser.id}`, tokens.refreshToken, { ex: 604800 });
+      } catch (e) {}
+
+      return {
+        user: formattedUser,
+        ...tokens,
+      };
+    }
+
+    // 2. Fallback check PostgreSQL (for existing seeded users like admin@raahi.gov.in)
+    const pgUser = await PgUser.findOne({
       where: {
         [Op.or]: [
-          { email: identifier },
-          { phone: identifier },
+          { email: idLower },
+          { phone: idTrimmed },
+          { id: idTrimmed },
         ],
       },
     });
 
-    if (!user) {
-      throw new Error('Invalid credentials');
+    if (pgUser) {
+      const isMatch = await bcrypt.compare(password, pgUser.password_hash);
+      if (!isMatch) {
+        throw new Error('Invalid credentials');
+      }
+
+      const role = this.normalizeRole(pgUser.role);
+
+      // Auto-replicate to MongoDB so mobile and web stay in complete sync!
+      try {
+        const syncedMongoUser = new MongoUser({
+          customId: pgUser.id,
+          name: pgUser.name,
+          email: pgUser.email.toLowerCase(),
+          password, // will be hashed by pre-save
+          role,
+          phone: pgUser.phone || undefined,
+          agency: pgUser.agency || undefined,
+          assignedDistrict: pgUser.district_id || undefined,
+          transporterId: pgUser.transporter_id || undefined,
+        });
+        await syncedMongoUser.save();
+      } catch (syncErr) {
+        // Ignored if already created or email exists
+      }
+
+      const formattedUser = {
+        id: pgUser.id,
+        customId: pgUser.id,
+        name: pgUser.name,
+        email: pgUser.email,
+        role,
+        assignedDistrict: pgUser.district_id,
+        transporterId: pgUser.transporter_id,
+        agency: pgUser.agency,
+        phone: pgUser.phone,
+      };
+
+      const tokens = this.generateTokens(formattedUser);
+      try {
+        await redisClient.set(`refresh_token:${formattedUser.id}`, tokens.refreshToken, { ex: 604800 });
+      } catch (e) {}
+
+      return {
+        user: formattedUser,
+        ...tokens,
+      };
     }
 
-    const isMatch = await bcrypt.compare(password, user.password_hash);
-    if (!isMatch) {
-      throw new Error('Invalid credentials');
-    }
-
-    const tokens = this.generateTokens(user);
-    await redisClient.set(`refresh_token:${user.id}`, tokens.refreshToken, { ex: 604800 });
-
-    return {
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        districtId: user.district_id,
-        transporterId: user.transporter_id,
-        agency: user.agency,
-        phone: user.phone,
-      },
-      ...tokens,
-    };
+    throw new Error('Invalid credentials');
   }
 
   static async refresh(refreshToken: string) {
     try {
       const decoded = jwt.verify(refreshToken, env.jwtRefreshSecret) as { id: string };
-      const savedToken = await redisClient.get(`refresh_token:${decoded.id}`);
+      let savedToken: string | null = null;
+      try {
+        savedToken = await redisClient.get(`refresh_token:${decoded.id}`);
+      } catch (e) {}
 
-      if (!savedToken || savedToken !== refreshToken) {
+      if (savedToken && savedToken !== refreshToken) {
         throw new Error('Invalid or expired refresh token');
       }
 
-      const user = await User.findByPk(decoded.id);
-      if (!user) {
+      // Check Mongo first
+      let user: any = await MongoUser.findById(decoded.id);
+      if (user) {
+        const tokens = this.generateTokens({
+          id: user._id.toString(),
+          customId: user.customId,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          assignedDistrict: user.assignedDistrict,
+          transporterId: user.transporterId,
+          agency: user.agency,
+          company: user.company,
+          phone: user.phone,
+        });
+        try {
+          await redisClient.set(`refresh_token:${user._id}`, tokens.refreshToken, { ex: 604800 });
+        } catch (e) {}
+        return tokens;
+      }
+
+      // Check Postgres
+      const pgUser = await PgUser.findByPk(decoded.id);
+      if (!pgUser) {
         throw new Error('User not found');
       }
 
-      const tokens = this.generateTokens(user);
-      await redisClient.set(`refresh_token:${user.id}`, tokens.refreshToken, { ex: 604800 });
+      const tokens = this.generateTokens({
+        id: pgUser.id,
+        name: pgUser.name,
+        email: pgUser.email,
+        role: pgUser.role,
+        assignedDistrict: pgUser.district_id,
+        transporterId: pgUser.transporter_id,
+        agency: pgUser.agency,
+        phone: pgUser.phone,
+      });
+      try {
+        await redisClient.set(`refresh_token:${pgUser.id}`, tokens.refreshToken, { ex: 604800 });
+      } catch (e) {}
 
       return tokens;
     } catch (err: any) {
@@ -138,7 +300,9 @@ export class AuthService {
   }
 
   static async logout(userId: string) {
-    await redisClient.del(`refresh_token:${userId}`);
+    try {
+      await redisClient.del(`refresh_token:${userId}`);
+    } catch (e) {}
     return true;
   }
 }

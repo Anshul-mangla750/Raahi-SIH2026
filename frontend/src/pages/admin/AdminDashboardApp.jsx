@@ -16,6 +16,7 @@ import { AIPredictionsPage } from './AIPredictionsPage';
 import { AlertsPage } from './AlertsPage';
 import { AnalyticsPage } from './AnalyticsPage';
 import { EmergencyModePage } from './EmergencyModePage';
+import { UserManagementPage } from './UserManagementPage';
 
 function AdminContent() {
   const { currentPage } = useApp();
@@ -38,6 +39,8 @@ function AdminContent() {
         return <FieldReportsPage />;
       case 'analytics':
         return <AnalyticsPage />;
+      case 'personnel':
+        return <UserManagementPage />;
       case 'emergency':
         return <EmergencyModePage />;
       case 'settings':

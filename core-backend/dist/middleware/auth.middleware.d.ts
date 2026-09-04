@@ -1,11 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 export interface AuthenticatedUser {
     id: string;
+    customId?: string;
     name: string;
     email: string;
-    role: 'admin' | 'district_officer' | 'field_agent' | 'transporter' | 'driver' | 'viewer';
+    role: 'admin' | 'transporter' | 'field_officer' | 'driver' | 'user' | string;
     districtId?: string | null;
+    assignedDistrict?: string | null;
     transporterId?: string | null;
+    agency?: string | null;
+    company?: string | null;
 }
 declare global {
     namespace Express {

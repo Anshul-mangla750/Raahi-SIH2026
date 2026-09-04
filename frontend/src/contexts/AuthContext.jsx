@@ -60,14 +60,19 @@ export const AuthProvider = ({ children }) => {
         ApiClient.setTokens(accessToken, refreshToken, rememberMe);
 
         const mappedRole =
-          apiUser.role === "admin" || apiUser.role === "district_officer"
-            ? "official"
-            : apiUser.role === "transporter" || apiUser.role === "driver"
-            ? "operator"
+          apiUser.role === "admin"
+            ? "admin"
+            : apiUser.role === "field_officer" || apiUser.role === "field_worker" || apiUser.role === "district_officer"
+            ? "field_officer"
+            : apiUser.role === "transporter"
+            ? "transporter"
+            : apiUser.role === "driver"
+            ? "driver"
             : "user";
 
         const loggedInUser = {
           id: apiUser.id,
+          customId: apiUser.customId || apiUser.id,
           name: apiUser.name,
           emailOrPhone: apiUser.email || identifier,
           role: mappedRole,
@@ -75,14 +80,14 @@ export const AuthProvider = ({ children }) => {
           roleTitle:
             apiUser.role === "admin"
               ? "National Logistics Administrator"
-              : apiUser.role === "district_officer"
-              ? "Regional Command Officer"
+              : apiUser.role === "field_officer" || apiUser.role === "field_worker"
+              ? "Regional Field Inspection Officer"
               : apiUser.role === "transporter"
               ? "Fleet Operations Manager"
               : apiUser.role === "driver"
               ? "Fleet Commercial Driver"
               : "Consignee / Citizen User",
-          agency: apiUser.agency || (mappedRole === "official" ? "MDoNER Logistics Division" : "Brahmaputra Freight"),
+          agency: apiUser.agency || apiUser.company || "RAAHI Logistics Network",
         };
 
         setActiveRoleTab(mappedRole);
