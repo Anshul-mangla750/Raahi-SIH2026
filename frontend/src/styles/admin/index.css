@@ -20,10 +20,12 @@
 .app-container a {
   color: var(--primary-600);
   text-decoration: none;
+  transition: color var(--transition-fast);
 }
 
 .app-container a:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  color: var(--primary-700);
 }
 
 .app-container input, .app-container select, .app-container textarea {
@@ -139,17 +141,22 @@
 
 .card-link {
   font-size: 12px;
+  font-weight: 600;
   color: var(--primary-600);
-  font-weight: 500;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 4px;
+  transition: color var(--transition-fast);
 }
 
 .card-link:hover {
   color: var(--primary-700);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 /* Stat Cards */

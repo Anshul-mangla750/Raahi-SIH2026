@@ -25,6 +25,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
+import raahiLogo from '@/assets/raahi_logo.jpeg';
 
 export const Sidebar = () => {
   const { currentPage, setCurrentPage, sidebarCollapsed, openModal, alerts } = useApp();
@@ -65,28 +66,13 @@ export const Sidebar = () => {
             setCurrentPage('dashboard');
           }}
           className="brand-logo-container"
+          title="RAAHI - Smart Routes, Safe Deliveries"
         >
-          {/* Stylized RAAHI / NER LogiSmart Logo SVG */}
-          <div className="brand-logo-icon">
-            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-              <rect width="44" height="44" rx="10" fill="#059669" />
-              {/* Mountain silhouettes */}
-              <path d="M6 32L16 18L24 28L30 20L38 32H6Z" fill="#10B981" opacity="0.6" />
-              {/* Delivery Truck Vector */}
-              <path d="M12 28H14M28 28H30" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" />
-              <path d="M11 20H24V28H11V20Z" fill="#FFFFFF" />
-              <path d="M24 22H29L33 25V28H24V22Z" fill="#FFFFFF" />
-              <circle cx="16" cy="28" r="2.5" fill="#047857" stroke="#FFFFFF" strokeWidth="1.5" />
-              <circle cx="28" cy="28" r="2.5" fill="#047857" stroke="#FFFFFF" strokeWidth="1.5" />
-              <path d="M8 22H6M9 25H5" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </div>
-          {!sidebarCollapsed && (
-            <div className="brand-info">
-              <span className="brand-name">NER LogiSmart</span>
-              <span className="brand-tagline">Smart Routes, Safe Deliveries</span>
-            </div>
-          )}
+          <img
+            src={raahiLogo}
+            alt="RAAHI - Smart Routes, Safe Deliveries"
+            className="brand-logo-img"
+          />
         </a>
       </div>
 
